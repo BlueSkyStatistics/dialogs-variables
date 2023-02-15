@@ -91,7 +91,7 @@ BSkyLoadRefresh("{{dataset.name}}")
             right: [objects.newvar.el.content, objects.swCase.el.content ],
             nav: {
                 name: localization.en.navigation,
-                icon: "icon-sqrt_x",
+                icon: "icon-sqrt_qmark",
                 modal: config.id
             }
         }
