@@ -100,7 +100,7 @@ BoxCoxTransform <- function(response, lambda=0)
 		BSkyFormat("\nError: A variable must be selected\n")
 	{{#else}}
 		{{if(options.selected.boxcoxChk !== "TRUE")}}
-			if(length({{dataset.name}}\${{selected.variableSelcted | safe}}[{{dataset.name}}\${{selected.variableSelcted | safe}} < 0]) == 0)
+			if(length({{dataset.name}}\${{selected.variableSelcted | safe}}[{{dataset.name}}\${{selected.variableSelcted | safe}} < 0 & !is.na({{dataset.name}}\${{selected.variableSelcted | safe}})]) == 0)
 			{
 				boxcoxObj = NULL 
 				bcox_{{selected.variableSelcted | safe}} = c()
@@ -167,7 +167,7 @@ BoxCoxTransform <- function(response, lambda=0)
 		bcox_temp_vector_values = c()
 		
 		{{if(options.selected.boxcoxChk !== "TRUE")}}
-			if(length(temp_vector_values[temp_vector_values < 0]) == 0)
+			if(length(temp_vector_values[temp_vector_values < 0 & !is.na(temp_vector_values)]) == 0)
 			{
 				boxcoxObj = NULL 
 				boxcoxLambda = NULL

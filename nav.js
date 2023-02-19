@@ -7,9 +7,9 @@ const nav = {
             "name": "Box-Cox",
             "icon": "icon-gaussian-function",
             "children": [
-                "./normalityBoxCoxAddRemoveLambda",
                 "./normalityBoxCoxTransform",
                 "./normalityBoxCoxInspection",
+                "./normalityBoxCoxAddRemoveLambda",
                 "./normalityInverseBoxCox"
             ]
         },        			
