@@ -101,7 +101,7 @@ BSkyLoadRefresh("{{dataset.name}}")
                     label: localization.en.target,
                     no: "target",
                     filter: "Numeric|Scale",
-                    extraction: "NoPrefix|UseComma|Enclosed",
+                    extraction: "String|Numeric|Date|Logical|Ordinal|Nominal|Scale",
                     required: true,
                 }), r: ['{{ var | safe}}']
             },
