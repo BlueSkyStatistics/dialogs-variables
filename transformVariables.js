@@ -100,8 +100,8 @@ BSkyLoadRefresh("{{dataset.name}}")
                 el: new dstVariableList(config, {
                     label: localization.en.target,
                     no: "target",
-                    filter: "Numeric|Scale",
-                    extraction: "String|Numeric|Date|Logical|Ordinal|Nominal|Scale",
+                    extraction: "NoPrefix|UseComma|Enclosed",
+                    filter: "String|Numeric|Date|Logical|Ordinal|Nominal|Scale",
                     required: true,
                 }), r: ['{{ var | safe}}']
             },
