@@ -68,9 +68,9 @@ class reorderByOccurance extends baseModal {
 ## [Reorder by Occurrence]
 require(forcats);
 {{ if ( options.selected.grp10 =="Overwrite" && options.selected.specifyOrder =="Ascending" ) }}
-{{dataset.name}}\${{selected.target[0] | safe}} <- forcats::fct_rev(forcats::fct_inorder({{dataset.name}}\${{selected.target[0] | safe}},ordered={{selected.ordered | safe}})){{/if}}
+{{dataset.name}}\${{selected.target[0] | safe}} <- forcats::fct_rev(forcats::fct_inorder({{dataset.name}}\${{selected.target[0] | safe}}, ordered={{selected.ordered | safe}})){{/if}}
 {{ if ( options.selected.grp10 =="Overwrite" && options.selected.specifyOrder =="Descending" ) }}
-{{dataset.name}}\${{selected.target[0] | safe}} <- forcats::fct_inorder({{dataset.name}}\${{selected.target[0] | safe}},ordered={{selected.ordered | safe}}){{/if}}
+{{dataset.name}}\${{selected.target[0] | safe}} <- forcats::fct_inorder({{dataset.name}}\${{selected.target[0] | safe}}, ordered={{selected.ordered | safe}}){{/if}}
 {{ if ( options.selected.grp10 =="Prefix" && options.selected.specifyOrder =="Ascending" ) }}
 {{dataset.name}}\${{selected.txt4 | safe}}_{{selected.target[0] | safe}} <- forcats::fct_rev(forcats::fct_inorder({{dataset.name}}\${{selected.target[0] | safe}},ordered={{selected.ordered | safe}})){{/if}}
 {{ if ( options.selected.grp10 =="Prefix" && options.selected.specifyOrder =="Descending") }}
@@ -148,8 +148,8 @@ require(forcats);
                 },
                 selected: {
                     target: instance.dialog.prepareSelected({ target: value }, instance.objects.target.r),
-                    grp10: common.getCheckedRadio("reorderByCount_grp10"),
-                    specifyOrder: common.getCheckedRadio("reorderByCount_specifyOrder"),
+                    grp10: common.getCheckedRadio("reorderByOccurance_grp10"),
+                    specifyOrder: common.getCheckedRadio("reorderByOccurance_specifyOrder"),
                     txt3: instance.objects.txt3.el.getVal(),
                     txt4: instance.objects.txt4.el.getVal(),
                     ordered: instance.objects.ordered.el.getVal() == true ? "TRUE" : "NA",
