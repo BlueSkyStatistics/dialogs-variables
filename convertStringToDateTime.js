@@ -1,8 +1,8 @@
 
 var localization = {
     en: {
-        title: "Convert Character Variables To Date",
-        navigation: "Character to Date",
+        title: "Convert Character Variables To Date & Time",
+        navigation: "Character to Date & Time",
         label1: "Select a suffix or prefix for converted variables",
         suffix: "Suffix",
         prefix: "Prefix",
@@ -62,10 +62,10 @@ help(strptime)
 
 
 
-class convertStringToDate extends baseModal {
+class convertStringToDateTime extends baseModal {
     constructor() {
         var config = {
-            id: "convertStringToDate",
+            id: "convertStringToDateTime",
             label: localization.en.title,
             modalType: "two",
             splitProcessing:false,
@@ -154,4 +154,4 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)
         this.help = localization.en.help;
     }
 }
-module.exports.item = new convertStringToDate().render()
+module.exports.item = new convertStringToDateTime().render()
