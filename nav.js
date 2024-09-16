@@ -30,7 +30,8 @@ const nav = {
             "icon": "icon-exchange",
             "children": [
                 "./convertDateToString",
-                "./convertStringToDate",
+				"./convertStringToDate",
+                "./convertStringToDateTime",
                 "./convertToFactor",
                 "./convertToOrdinal"
             ]
