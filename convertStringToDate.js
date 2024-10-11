@@ -29,7 +29,7 @@ bsky_currentDay = lubridate::day(bsky_currentDateTime)
 #Get current hour, minute, seconds, and milliseconds
 bsky_currentHour <- lubridate::hour(bsky_currentDateTime)
 bsky_currentMinute <- lubridate::minute(bsky_currentDateTime)
-bsky_currentSeconds <- lubridate::second(bsky_currentDateTime)
+bsky_currentSeconds <- floor(lubridate::second(bsky_currentDateTime))
 
 bsky_fullSeconds <- as.numeric(bsky_currentDateTime)
 bsky_currentMilliseconds <- (bsky_fullSeconds - floor(bsky_fullSeconds)) * 1000 
@@ -69,25 +69,20 @@ BSkyWeekdayToNumber <- function(day)
 
 BSkyConvertCharDateVarToDate <- function(charDateVar, dateFormat, timeFormat, 
 					missingYear = lubridate::year(lubridate::now()), missingMonth = lubridate::month(lubridate::now()), missingDay = lubridate::day(lubridate::now()),
-					missingHour = lubridate::hour(lubridate::now()), missingMinute = lubridate::minute(lubridate::now()), missingSeconds = lubridate::second(lubridate::now())
+					missingHour = lubridate::hour(lubridate::now()), missingMinute = lubridate::minute(lubridate::now()), missingSeconds = floor(lubridate::second(lubridate::now()))
 				)
 {
 	if(timeFormat == ''){
 		switch(dateFormat,
 				 #"month day" = {return(as.POSIXct(ymd(paste(missingYear,"/",charDateVar),tz = "UTC")))},
 				 "month day" = {return(ymd(paste(missingYear,"/",charDateVar),tz = "UTC"))},
-				 
 				 "day month" = {return(ydm(paste(missingYear,"/",charDateVar),tz = "UTC"))},
-				 
 				 "month year" = {return(dmy(paste(missingDay,"/",charDateVar),tz = "UTC"))},
 				 #"month year" = {return(format(as.POSIXct(dmy(paste(missingDay,"/",charDateVar)),tz = "UTC"),tz = "UTC", usetz = TRUE))},
-				 
 				 "year month" = {return(ymd(paste(charDateVar,"/",missingDay),tz = "UTC"))},
-				 
 				 "year only" = {return(ymd(paste(charDateVar, "/", missingMonth, "/", missingDay),tz = "UTC"))},
 				 "month only" =  {return(ymd(paste(missingYear,"/",charDateVar, "/", missingDay),tz = "UTC"))},
 				 "day only" = {return(ymd(paste(missingYear, "/", missingMonth, "/", BSkyWeekdayToNumber(charDateVar)),tz = "UTC"))},
-				 
 				 "year month day" = {return(ymd(charDateVar,tz = "UTC"))},
 				 "month day year" = {return(mdy(charDateVar,tz = "UTC"))},
 				 "day month year" = {return(dmy(charDateVar,tz = "UTC"))},
@@ -106,43 +101,42 @@ BSkyConvertCharDateVarToDate <- function(charDateVar, dateFormat, timeFormat,
 			"Hour only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, charDateVar, ":00:00"),tz = "UTC"))}, 
 			"Min only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", charDateVar, ":00"),tz = "UTC"))}, 
 			"Sec only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", missingMinute, ":", charDateVar),tz = "UTC"))},
-			"Millisec only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", missingMinute, ":",  missingSeconds, "." ,charDateVar),tz = "UTC"))},
+			"Millisec only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", missingMinute, ":",  paste0(missingSeconds, "." ,charDateVar)),tz = "UTC"))},
 		
 			stop("Invalid time format type")
 		)
 	} else {
 		bsky_date_time = switch(dateFormat,
 				 "month day" = {ymd_hms(paste(charDateVar),tz = "UTC")},
-				 
 				 "day month" = {ydm_hms(paste(charDateVar),tz = "UTC")},
-				 
 				 "month year" = {dmy_hms(paste(charDateVar),tz = "UTC")},
-				 
 				 "year month" = {ymd_hms(paste(charDateVar),tz = "UTC")},
-				 
 				 "year only" = {ymd_hms(paste(charDateVar),tz = "UTC")},
 				 "month only" =  {ymd_hms(paste(missingYear),tz = "UTC")},
 				 "day only" = {ymd_hms(paste(charDateVar),tz = "UTC")},
-				 
 				 "year month day" = {ymd_hms(charDateVar,tz = "UTC")},
 				 "month day year" = {mdy_hms(charDateVar,tz = "UTC")},
 				 "day month year" = {dmy_hms(charDateVar,tz = "UTC")},
 				 
-				 stop("Invalid date format type")
+				 stop("Invalid date time format type")
 		)
 		return(bsky_date_time)
 	}
 }
 
 {{if(options.selected.rdgrp1 ==="suffix")}} 
-{{dataset.name}}\${{selected.Destination | safe}}{{selected.prefixOrSuffix | safe}} = BSkyConvertCharDateVarToDate(as.character({{dataset.name}}\${{selected.Destination | safe}}), "{{selected.DateFormat | safe}}", "{{selected.TimeFormat | safe}}", bsky_missingYear, bsky_missingMonth, bsky_missingDay)
 	if(grepl("Millisec", "{{selected.TimeFormat | safe}}")){
-		{{dataset.name}}\${{selected.Destination | safe}}{{selected.prefixOrSuffix | safe}}_char = strftime({{dataset.name}}\${{selected.Destination | safe}}{{selected.prefixOrSuffix | safe}}, "%Y-%m-%d %H:%M:%OS3")
+		{{dataset.name}}\${{selected.Destination | safe}}{{selected.prefixOrSuffix | safe}}_fs = BSkyConvertCharDateVarToDate(as.character({{dataset.name}}\${{selected.Destination | safe}}), "{{selected.DateFormat | safe}}", "{{selected.TimeFormat | safe}}", bsky_missingYear, bsky_missingMonth, bsky_missingDay, bsky_missingHour, bsky_missingMinute, bsky_missingSeconds)
+		{{dataset.name}}\${{selected.Destination | safe}}{{selected.prefixOrSuffix | safe}}_char = strftime({{dataset.name}}\${{selected.Destination | safe}}{{selected.prefixOrSuffix | safe}}_fs, "%Y-%m-%d %H:%M:%OS3")
+	}else {
+		{{dataset.name}}\${{selected.Destination | safe}}{{selected.prefixOrSuffix | safe}} = BSkyConvertCharDateVarToDate(as.character({{dataset.name}}\${{selected.Destination | safe}}), "{{selected.DateFormat | safe}}", "{{selected.TimeFormat | safe}}", bsky_missingYear, bsky_missingMonth, bsky_missingDay, bsky_missingHour, bsky_missingMinute, bsky_missingSeconds)
 	}
 {{#else}}
-{{dataset.name}}\${{selected.prefixOrSuffix | safe}}{{selected.Destination | safe}} = BSkyConvertCharDateVarToDate(as.character({{dataset.name}}\${{selected.Destination | safe}}), "{{selected.DateFormat | safe}}", "{{selected.TimeFormat | safe}}", bsky_missingYear, bsky_missingMonth, bsky_missingDay)
 	if(grepl("Millisec", "{{selected.TimeFormat | safe}}")){
-		{{dataset.name}}\${{selected.prefixOrSuffix | safe}}{{selected.Destination | safe}}_char = strftime({{dataset.name}}\${{selected.prefixOrSuffix | safe}}{{selected.Destination | safe}}, "%Y-%m-%d %H:%M:%OS3")
+		{{dataset.name}}\${{selected.prefixOrSuffix | safe}}{{selected.Destination | safe}}_fs = BSkyConvertCharDateVarToDate(as.character({{dataset.name}}\${{selected.Destination | safe}}), "{{selected.DateFormat | safe}}", "{{selected.TimeFormat | safe}}", bsky_missingYear, bsky_missingMonth, bsky_missingDay, bsky_missingHour, bsky_missingMinute, bsky_missingSeconds)
+		{{dataset.name}}\${{selected.prefixOrSuffix | safe}}{{selected.Destination | safe}}_char = strftime({{dataset.name}}\${{selected.prefixOrSuffix | safe}}{{selected.Destination | safe}}_fs, "%Y-%m-%d %H:%M:%OS3")
+	}else {
+		{{dataset.name}}\${{selected.prefixOrSuffix | safe}}{{selected.Destination | safe}} = BSkyConvertCharDateVarToDate(as.character({{dataset.name}}\${{selected.Destination | safe}}), "{{selected.DateFormat | safe}}", "{{selected.TimeFormat | safe}}", bsky_missingYear, bsky_missingMonth, bsky_missingDay, bsky_missingHour, bsky_missingMinute, bsky_missingSeconds)
 	}
 {{/if}}
 
