@@ -1,53 +1,5 @@
 
-var localization = {
-    en: {
-        title: "Add New Levels",
-        navigation: "Add",
-        target: "Factor variables to add new levels to",
-        label1: "Add new levels to one or more factor variable(s). Save results to existing variables or create new variables by specifying a prefix/suffix. New variables will be created with the prefix/suffix appended to existing names. ",
-        newLevels: "Enter new levels enclosed in quotes and separated by a comma for e.g. \"level1\",\"level2\",\"level3",
-        label2: "Save new levels to new variable(s) or overwrite existing variable(s)",
-        rd3: "Specify a suffix (A new variable will be created with the suffix) ",
-        txt3: "Enter a suffix",
-        rd2: "Specify a prefix (A new variable will be created with the prefix) ",
-        txt4: "Enter a prefix",
-        rd1: "Overwrite  existing variables",
-        help: {
-            title: "Add New Levels",
-            r_help: "help(fct_expand, package=\"forcats\")",
-            body: `
-<b>NOTE: DON'T ENCLOSE LEVELS IN DOUBLE QUOTES OR SINGLE QUOTES, THERE CANNOT BE SPACES IN THE LEVEL NAMES. ENTER LEVELS SEPARATED BY COMMAS IN THE FORMAT LEVEL1,LEVEL2, LEVEL3</b></br>
-<b>Description</b></br>
-Add additional levels to a factor. Add new levels to one or more factor variable(s). The results can be into existing variables (overwriting) or creating new variables by specifying a prefix/suffix. New variables will be created with the prefix/suffix appended to existing names. 
-<br/>
-<b>Usage</b>
-<br/>
-<code> 
-fct_expand(f, ...)
-</code> <br/>
-<b>Arguments</b><br/>
-<ul>
-<li>
-f: A factor (or character vector).
-</li>
-<li>
-...: Additional levels to add to the factor. Levels that already exist will be silently ignored.
-</li>
-</ul>
-<b>Examples</b><br/>
-<code> 
-f <- factor(sample(letters[1:3], 20, replace = TRUE))<br/>
-f<br/>
-fct_expand(f, "d", "e", "f")<br/>
-fct_expand(f, letters[1:6])<br/>
-</code><br/>
-<b>Package</b></br>
-forcats</br>
-<b>Help</b></br>
-help(fct_expand, package="forcats")
-        `}
-    }
-}
+
 
 
 
@@ -57,10 +9,13 @@ help(fct_expand, package="forcats")
 
 
 class addNewLevels extends baseModal {
+    static dialogId = 'addNewLevels'
+    static t = baseModal.makeT(addNewLevels.dialogId)
+
     constructor() {
         var config = {
-            id: "addNewLevels",
-            label: localization.en.title,
+            id: addNewLevels.dialogId,
+            label: addNewLevels.t('title'),
             modalType: "two",
             splitProcessing:false,
             RCode: `
@@ -75,11 +30,11 @@ require(forcats);
 `
         }
         var objects = {
-            label1: { el: new labelVar(config, { label: localization.en.label1, h: 6 }) },
+            label1: { el: new labelVar(config, { label: addNewLevels.t('label1'), h: 6 }) },
             content_var: { el: new srcVariableList(config, {action: "move"}) },
             target: {
                 el: new dstVariableList(config, {
-                    label: localization.en.target,
+                    label: addNewLevels.t('target'),
                     no: "target",
                     filter: "Numeric|Ordinal|Nominal",
                     extraction: "NoPrefix|UseComma",
@@ -89,7 +44,7 @@ require(forcats);
             newLevels: {
                 el: new input(config, {
                     no: 'newLevels',
-                    label: localization.en.newLevels,
+                    label: addNewLevels.t('newLevels'),
                     placeholder: "",
                     extraction: "CreateArray",
                     value: "",
@@ -99,12 +54,12 @@ require(forcats);
                     type: "character",
                 }),
             },
-            label2: { el: new labelVar(config, { label: localization.en.label2, h: 6, style: "mt-3" }) },
-            rd3: { el: new radioButton(config, { label: localization.en.rd3, required: true, no: "grp10", dependant_objects: ["txt3"], increment: "rd3", value: "Suffix", state: "checked", extraction: "ValueAsIs", dependant_objects: ["txt3"] }) },
+            label2: { el: new labelVar(config, { label: addNewLevels.t('label2'), h: 6, style: "mt-3" }) },
+            rd3: { el: new radioButton(config, { label: addNewLevels.t('rd3'), required: true, no: "grp10", dependant_objects: ["txt3"], increment: "rd3", value: "Suffix", state: "checked", extraction: "ValueAsIs", dependant_objects: ["txt3"] }) },
             txt3: {
                 el: new input(config, {
                     no: 'txt3',
-                    label: localization.en.txt3,
+                    label: addNewLevels.t('txt3'),
                     placeholder: "",
                     extraction: "TextAsIs",
                     value: "",
@@ -112,11 +67,11 @@ require(forcats);
                     type: "character"
                 }),
             },
-            rd2: { el: new radioButton(config, { label: localization.en.rd2, required: true, no: "grp10", increment: "rd2", dependant_objects: ["txt4"], value: "Prefix", state: "", extraction: "ValueAsIs", dependant_objects: ["txt4"] }) },
+            rd2: { el: new radioButton(config, { label: addNewLevels.t('rd2'), required: true, no: "grp10", increment: "rd2", dependant_objects: ["txt4"], value: "Prefix", state: "", extraction: "ValueAsIs", dependant_objects: ["txt4"] }) },
             txt4: {
                 el: new input(config, {
                     no: 'txt4',
-                    label: localization.en.txt4,
+                    label: addNewLevels.t('txt4'),
                     placeholder: "",
                     extraction: "TextAsIs",
                     value: "",
@@ -124,20 +79,26 @@ require(forcats);
                     type: "character"
                 }),
             },
-            rd1: { el: new radioButton(config, { label: localization.en.rd1, no: "grp10", required: true, increment: "rd1", value: "Overwrite", state: "", extraction: "ValueAsIs" }) },
+            rd1: { el: new radioButton(config, { label: addNewLevels.t('rd1'), no: "grp10", required: true, increment: "rd1", value: "Overwrite", state: "", extraction: "ValueAsIs" }) },
         }
         const content = {
             head: [objects.label1.el.content],
             left: [objects.content_var.el.content],
             right: [objects.target.el.content, objects.newLevels.el.content, objects.label2.el.content, objects.rd3.el.content, objects.txt3.el.content, objects.rd2.el.content, objects.txt4.el.content, objects.rd1.el.content],
             nav: {
-                name: localization.en.navigation,
+                name: addNewLevels.t('navigation'),
                 icon: "icon-plus_sign",
                 modal: config.id
             }
         }
         super(config, objects, content);
-        this.help = localization.en.help;
+        
+        this.help = {
+            title: addNewLevels.t('help.title'),
+            r_help: "help(data,package='utils')",
+            body: addNewLevels.t('help.body')
+        }
+;
     }
     prepareExecution(instance) {
         var res = [];
@@ -163,4 +124,7 @@ require(forcats);
         return res;
     }
 }
-module.exports.item = new addNewLevels().render()
+
+module.exports = {
+    render: () => new addNewLevels().render()
+}

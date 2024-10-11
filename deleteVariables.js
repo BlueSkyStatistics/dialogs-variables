@@ -1,35 +1,5 @@
 
-var localization = {
-    en: {
-        title: "Delete Variables",
-        navigation: "Delete",
-        trg: "Variables to be deleted",
-        help: {
-            title: "Remove NAs",
-            r_help: "help(na.omit, package=data.table)",
-            body: `
-<b>Description</b></br>
-Remove missing values/NA from dataset/dataframe
-Creates new/Overwrites existing dataset by removing rows with one or more missing values for the columns/variable names selected
-<br/>
-<b>Usage</b>
-<br/>
-<code> 
-na.omit(object =dataset[c(var1,var2...]))​
-</code> <br/>
-<b>Arguments</b><br/>
-<ul>
-<li>
-​object: an R object.​
-</li>
-</ul>
-<b>Package</b></br>
-data.table</br>
-<b>Help</b></br>
-help(na.omit)
-`}
-    }
-}
+
 
 
 
@@ -37,10 +7,13 @@ help(na.omit)
 
 
 class deleteVariables extends baseModal {
+    static dialogId = 'deleteVariables'
+    static t = baseModal.makeT(deleteVariables.dialogId)
+
     constructor() {
         var config = {
-            id: "deleteVariables",
-            label: localization.en.title,
+            id: deleteVariables.dialogId,
+            label: deleteVariables.t('title'),
             modalType: "two",
             splitProcessing:false,
             RCode: `
@@ -53,7 +26,7 @@ BSkyLoadRefresh("{{dataset.name}}")
             content_var: { el: new srcVariableList(config, {action: "move"}) },
             trg: {
                 el: new dstVariableList(config, {
-                    label: localization.en.trg,
+                    label: deleteVariables.t('trg'),
                     no: "trg",
                     filter: "String|Numeric|Date|Logical|Ordinal|Nominal|Scale",
                     extraction: "NoPrefix|UseComma",
@@ -65,13 +38,22 @@ BSkyLoadRefresh("{{dataset.name}}")
             left: [objects.content_var.el.content],
             right: [objects.trg.el.content],
             nav: {
-                name: localization.en.navigation,
+                name: deleteVariables.t('navigation'),
                 icon: "icon-trash",
                 modal: config.id
             }
         }
         super(config, objects, content);
-        this.help = localization.en.help;
+        
+        this.help = {
+            title: deleteVariables.t('help.title'),
+            r_help: "help(data,package='utils')",
+            body: deleteVariables.t('help.body')
+        }
+;
     }
 }
-module.exports.item = new deleteVariables().render()
+
+module.exports = {
+    render: () => new deleteVariables().render()
+}

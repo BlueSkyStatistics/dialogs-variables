@@ -1,104 +1,15 @@
 
-var localization = {
-    en: {
-        title: "Character To Date",
-        navigation: "Character To Date",
-		labelInfo: "If the conversion of the date character variable to date data type is successful, it will always create the new date variable with YYYY-MM-DD format",
-        label1: "Select a suffix or prefix for converted variable",
-        suffix: "Suffix",
-        prefix: "Prefix",
-        prefixOrSuffix: "Enter a prefix or suffix",
-        Destination: "Select character variable to convert to date",
-        DateFormat: "Specify the date format of the character variable selected",
-        
-		//Not used n this dialog
-		TimeZone: "Select a time zone (default -nothing  selected is the local time zone of the PC)",
-		
-		missingYear: "If year is missing in date character variable, type in the year, e.g. 2024. Leave blank to use current year",
-		missingMonth: "If month is missing in date character variable, type in the month, e.g. 03, Mar, or March for March. Leave blank to use current month",
-		missingDay: "If day is missing in date character variable, type in the day of the month, e.g. 17. Leave blank to use today",
-		
-        help: {
-            title: "Convert partial of full Date characters to Date data type",
-            r_help: "help(package=\"lubridate\")",
-            body: `
-<b>Description</b></br>
-Converts a date character string with partial or full date elements, i.e., date elements such as year, month, and day of the month to a date (POSIXct class) type. Select a format from the possible list of formats that represents the date character string (i.e., order and presence/absence of month, day, or year elements). 
-<br/>
-Many string preparation steps are performed internally before calling the functions from lubridate package to convert the prepared character date string to a new POSIXct date variable.
-<br/>
-<br/>
-OPTIONS
-<br/>
-Expand the OPTIONS to fine-tune further whether to use the current year, month, or today if the year, month, or date elements are absent in the character date string variable
-<br/>
-<br/> 
-	Date Formatting choices for the selected character date string variable are:
-	</br>
-	</br>
-	month day:
-	</br>
-	Choose this when the selected character date string only contains the month followed by a day and no year, such as 03/17, 05-25, Mar,15 , May-21, ...
-	</br>
-	</br>
-	day month:
-	</br>
-	Choose this when the selected character date string only contains the day followed by the month and no year, such as 17/03, 25-05, 15,Mar , 21-May,...
-	</br>
-	</br>
-	month year:
-	</br>
-	Choose this when the selected character date string only contains the month followed by the year and no day of the month, such as 03/2024, 05-2020, Mar,2023 , Jul-2018,...
-	</br>
-	</br>
-	year month:
-	</br>
-	Choose this when the selected character date string only contains the year followed by the month and no day of the month, such as 2024/03, 2020-05, 2023,Mar , 2018-Jul,...
-	</br>
-	</br>
-	year only:
-	</br>
-	Choose this when the selected character date string only year and no day or month, such as 2020, 2024, 1995, ....
-	</br>
-	</br>
-	month only:
-	</br>
-	Choose this when the selected character date string only month and no day or year, such as 03, 11, Mar, November, ....
-	</br>
-	</br>
-	day only:
-	</br>
-	Choose this when the selected character date string only day and no month or year, such as day of the month as 03, 17, 28, or day of the week as Mon, Saturday, ....
-	</br>
-	</br>
-	year month day:
-	</br>
-	Choose this when the selected character date string year, followed by month and day such as 2024/03/22, 2020-05-19, 2019,Mar,26,...
-	</br>
-	</br>
-	month day year:
-	</br>
-	Choose this whenthe selected character date string contains the month, followed by day and year, such as 03/22/2024, 05-19-2020, Mar,26,2019,...
-	</br>
-	</br>
-	day month year:
-	</br>
-	Choose this when the selected character date string contains a day, followed by a month and year, such as 22/03/2024, 19-05-2020, 26 March 2019,...
-	</br>
-	</br>
-	</br>
-<b>Help</b></br>
-help(package=\"lubridate\")
-`}
-    }
-}
 
 
-class convertCharacterToDate extends baseModal {
+
+class convertStringToDate extends baseModal {
+    static dialogId = 'convertStringToDate'
+    static t = baseModal.makeT(convertStringToDate.dialogId)
+
     constructor() {
         var config = {
-            id: "convertCharacterToDate",
-            label: localization.en.title,
+            id: convertStringToDate.dialogId,
+            label: convertStringToDate.t('title'),
             modalType: "two",
             splitProcessing:false,
             RCode:`
@@ -107,17 +18,36 @@ require(lubridate)
 
 #BSkystrptime (varNames = c( {{selected.Destination | safe}}), dateFormat = "{{selected.DateFormat | safe}}", timezone = "{{selected.TimeZone | safe}}", prefixOrSuffix = "{{selected.rdgrp1 | safe}}",  prefixOrSuffixValue = "{{selected.prefixOrSuffix | safe}}", data = "{{dataset.name}}") 
 
-# Extract year, month, and day
-bsky_currentDate = Sys.Date()
-bsky_currentYear = year(bsky_currentDate)
-bsky_currentMonth = month(bsky_currentDate)
-bsky_currentDay = day(bsky_currentDate)
+# Extract current year, month, and day
+# bsky_currentDate = Sys.Date()
+
+bsky_currentDateTime = lubridate::now()
+bsky_currentYear = lubridate::year(bsky_currentDateTime)
+bsky_currentMonth = lubridate::month(bsky_currentDateTime)
+bsky_currentDay = lubridate::day(bsky_currentDateTime)
+
+#Get current hour, minute, seconds, and milliseconds
+bsky_currentHour <- lubridate::hour(bsky_currentDateTime)
+bsky_currentMinute <- lubridate::minute(bsky_currentDateTime)
+bsky_currentSeconds <- lubridate::second(bsky_currentDateTime)
+
+bsky_fullSeconds <- as.numeric(bsky_currentDateTime)
+bsky_currentMilliseconds <- (bsky_fullSeconds - floor(bsky_fullSeconds)) * 1000 
+
 
 bsky_missingYear = {{if(options.selected.missingYear !="")}} "{{selected.missingYear | safe}}" {{#else}} bsky_currentYear {{/if}}
 
 bsky_missingMonth = {{if(options.selected.missingMonth !="")}} "{{selected.missingMonth | safe}}" {{#else}} bsky_currentMonth {{/if}}
 
 bsky_missingDay = {{if(options.selected.missingDay !="")}} "{{selected.missingDay | safe}}" {{#else}} bsky_currentDay {{/if}}
+
+
+bsky_missingHour = {{if(options.selected.missingHour !="")}} "{{selected.missingHour | safe}}" {{#else}} bsky_currentHour {{/if}}
+
+bsky_missingMinute = {{if(options.selected.missingMinute !="")}} "{{selected.missingMinute | safe}}" {{#else}} bsky_currentMinute {{/if}}
+
+bsky_missingSeconds = {{if(options.selected.missingSeconds !="")}} "{{selected.missingSeconds | safe}}" {{#else}} bsky_currentSeconds {{/if}}
+
 
 # Create a mapping function
 BSkyWeekdayToNumber <- function(day) 
@@ -137,35 +67,83 @@ BSkyWeekdayToNumber <- function(day)
   return(day)
 }
 
-BSkyConvertCharDateVarToDate <- function(charDateVar, dateFormat, missingYear = year(Sys.Date()), missingMonth = month(Sys.Date()), missingDay = day(Sys.Date()))
+BSkyConvertCharDateVarToDate <- function(charDateVar, dateFormat, timeFormat, 
+					missingYear = lubridate::year(lubridate::now()), missingMonth = lubridate::month(lubridate::now()), missingDay = lubridate::day(lubridate::now()),
+					missingHour = lubridate::hour(lubridate::now()), missingMinute = lubridate::minute(lubridate::now()), missingSeconds = lubridate::second(lubridate::now())
+				)
 {
-	switch(dateFormat,
-			 #"month day" = {return(as.POSIXct(ymd(paste(missingYear,"/",charDateVar),tz = "UTC")))},
-			 "month day" = {return(ymd(paste(missingYear,"/",charDateVar),tz = "UTC"))},
-			 
-			 "day month" = {return(ydm(paste(missingYear,"/",charDateVar),tz = "UTC"))},
-			 
-			 "month year" = {return(dmy(paste(missingDay,"/",charDateVar),tz = "UTC"))},
-			 #"month year" = {return(format(as.POSIXct(dmy(paste(missingDay,"/",charDateVar)),tz = "UTC"),tz = "UTC", usetz = TRUE))},
-			 
-			 "year month" = {return(ymd(paste(charDateVar,"/",missingDay),tz = "UTC"))},
-			 
-			 "year only" = {return(ymd(paste(charDateVar, "/", missingMonth, "/", missingDay),tz = "UTC"))},
-			 "month only" =  {return(ymd(paste(missingYear,"/",charDateVar, "/", missingDay),tz = "UTC"))},
-			 "day only" = {return(ymd(paste(missingYear, "/", missingMonth, "/", BSkyWeekdayToNumber(charDateVar)),tz = "UTC"))},
-			 
-			 "year month day" = {return(ymd(charDateVar,tz = "UTC"))},
-			 "month day year" = {return(mdy(charDateVar,tz = "UTC"))},
-			 "day month year" = {return(dmy(charDateVar,tz = "UTC"))},
-			 
-			 stop("Invalid date format type")
-	  )
+	if(timeFormat == ''){
+		switch(dateFormat,
+				 #"month day" = {return(as.POSIXct(ymd(paste(missingYear,"/",charDateVar),tz = "UTC")))},
+				 "month day" = {return(ymd(paste(missingYear,"/",charDateVar),tz = "UTC"))},
+				 
+				 "day month" = {return(ydm(paste(missingYear,"/",charDateVar),tz = "UTC"))},
+				 
+				 "month year" = {return(dmy(paste(missingDay,"/",charDateVar),tz = "UTC"))},
+				 #"month year" = {return(format(as.POSIXct(dmy(paste(missingDay,"/",charDateVar)),tz = "UTC"),tz = "UTC", usetz = TRUE))},
+				 
+				 "year month" = {return(ymd(paste(charDateVar,"/",missingDay),tz = "UTC"))},
+				 
+				 "year only" = {return(ymd(paste(charDateVar, "/", missingMonth, "/", missingDay),tz = "UTC"))},
+				 "month only" =  {return(ymd(paste(missingYear,"/",charDateVar, "/", missingDay),tz = "UTC"))},
+				 "day only" = {return(ymd(paste(missingYear, "/", missingMonth, "/", BSkyWeekdayToNumber(charDateVar)),tz = "UTC"))},
+				 
+				 "year month day" = {return(ymd(charDateVar,tz = "UTC"))},
+				 "month day year" = {return(mdy(charDateVar,tz = "UTC"))},
+				 "day month year" = {return(dmy(charDateVar,tz = "UTC"))},
+				 
+				 stop("Invalid date format type")
+		)
+	} else if(dateFormat == '') {  
+		#ymd_hms("2024-10-07 12:34:56.789")
+		switch(timeFormat,
+			"Hour Min Sec" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, charDateVar),tz = "UTC"))}, 
+			"Hour Min Sec Millisec" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, charDateVar),tz = "UTC"))},
+			"Min Sec Millisec" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", charDateVar),tz = "UTC"))},								
+			"Hour Min" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, charDateVar, ":00"),tz = "UTC"))}, 
+			"Min Sec" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", charDateVar),tz = "UTC"))}, 
+			"Sec Millisec" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", missingMinute, ":", charDateVar),tz = "UTC"))},  
+			"Hour only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, charDateVar, ":00:00"),tz = "UTC"))}, 
+			"Min only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", charDateVar, ":00"),tz = "UTC"))}, 
+			"Sec only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", missingMinute, ":", charDateVar),tz = "UTC"))},
+			"Millisec only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", missingMinute, ":",  missingSeconds, "." ,charDateVar),tz = "UTC"))},
+		
+			stop("Invalid time format type")
+		)
+	} else {
+		bsky_date_time = switch(dateFormat,
+				 "month day" = {ymd_hms(paste(charDateVar),tz = "UTC")},
+				 
+				 "day month" = {ydm_hms(paste(charDateVar),tz = "UTC")},
+				 
+				 "month year" = {dmy_hms(paste(charDateVar),tz = "UTC")},
+				 
+				 "year month" = {ymd_hms(paste(charDateVar),tz = "UTC")},
+				 
+				 "year only" = {ymd_hms(paste(charDateVar),tz = "UTC")},
+				 "month only" =  {ymd_hms(paste(missingYear),tz = "UTC")},
+				 "day only" = {ymd_hms(paste(charDateVar),tz = "UTC")},
+				 
+				 "year month day" = {ymd_hms(charDateVar,tz = "UTC")},
+				 "month day year" = {mdy_hms(charDateVar,tz = "UTC")},
+				 "day month year" = {dmy_hms(charDateVar,tz = "UTC")},
+				 
+				 stop("Invalid date format type")
+		)
+		return(bsky_date_time)
+	}
 }
 
 {{if(options.selected.rdgrp1 ==="suffix")}} 
-{{dataset.name}}\${{selected.Destination | safe}}{{selected.prefixOrSuffix | safe}} = BSkyConvertCharDateVarToDate(as.character({{dataset.name}}\${{selected.Destination | safe}}), "{{selected.DateFormat | safe}}", bsky_missingYear, bsky_missingMonth, bsky_missingDay)
+{{dataset.name}}\${{selected.Destination | safe}}{{selected.prefixOrSuffix | safe}} = BSkyConvertCharDateVarToDate(as.character({{dataset.name}}\${{selected.Destination | safe}}), "{{selected.DateFormat | safe}}", "{{selected.TimeFormat | safe}}", bsky_missingYear, bsky_missingMonth, bsky_missingDay)
+	if(grepl("Millisec", "{{selected.TimeFormat | safe}}")){
+		{{dataset.name}}\${{selected.Destination | safe}}{{selected.prefixOrSuffix | safe}}_char = strftime({{dataset.name}}\${{selected.Destination | safe}}{{selected.prefixOrSuffix | safe}}, "%Y-%m-%d %H:%M:%OS3")
+	}
 {{#else}}
-{{dataset.name}}\${{selected.prefixOrSuffix | safe}}{{selected.Destination | safe}} = BSkyConvertCharDateVarToDate(as.character({{dataset.name}}\${{selected.Destination | safe}}), "{{selected.DateFormat | safe}}", bsky_missingYear, bsky_missingMonth, bsky_missingDay)
+{{dataset.name}}\${{selected.prefixOrSuffix | safe}}{{selected.Destination | safe}} = BSkyConvertCharDateVarToDate(as.character({{dataset.name}}\${{selected.Destination | safe}}), "{{selected.DateFormat | safe}}", "{{selected.TimeFormat | safe}}", bsky_missingYear, bsky_missingMonth, bsky_missingDay)
+	if(grepl("Millisec", "{{selected.TimeFormat | safe}}")){
+		{{dataset.name}}\${{selected.prefixOrSuffix | safe}}{{selected.Destination | safe}}_char = strftime({{dataset.name}}\${{selected.prefixOrSuffix | safe}}{{selected.Destination | safe}}, "%Y-%m-%d %H:%M:%OS3")
+	}
 {{/if}}
 
 BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)        
@@ -175,14 +153,14 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)
             })
         }
         var objects = {
-			labelInfo: { el: new labelVar(config, { label: localization.en.labelInfo, h: 6 }) },
-            label1: { el: new labelVar(config, { label: localization.en.label1, h: 5 }) },
-            suffix: { el: new radioButton(config, { label: localization.en.suffix, no: "rdgrp1", increment: "suffix", value: "suffix", state: "checked", extraction: "ValueAsIs" }) },
-            prefix: { el: new radioButton(config, { label: localization.en.prefix, no: "rdgrp1", increment: "prefix", value: "prefix", state: "", extraction: "ValueAsIs", }) },
+			labelInfo: { el: new labelVar(config, { label: convertStringToDate.t('labelInfo'), h: 6 }) },
+            label1: { el: new labelVar(config, { label: convertStringToDate.t('label1'), h: 5 }) },
+            suffix: { el: new radioButton(config, { label: convertStringToDate.t('suffix'), no: "rdgrp1", increment: "suffix", value: "suffix", state: "checked", extraction: "ValueAsIs" }) },
+            prefix: { el: new radioButton(config, { label: convertStringToDate.t('prefix'), no: "rdgrp1", increment: "prefix", value: "prefix", state: "", extraction: "ValueAsIs", }) },
             prefixOrSuffix: {
                 el: new input(config, {
                     no: 'prefixOrSuffix',
-                    label: localization.en.prefixOrSuffix,
+                    label: convertStringToDate.t('prefixOrSuffix'),
                     placeholder: "",
                     extraction: "TextAsIs",
 					enforceRobjectRules: false,
@@ -195,7 +173,7 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)
             content_var: { el: new srcVariableList(config, {action: "move"}) },
             Destination: {
                 el: new dstVariable(config, {
-                    label: localization.en.Destination,
+                    label: convertStringToDate.t('Destination'),
                     no: "Destination",
                     filter: "String|Numeric|Date|Ordinal|Nominal|Scale",
                     //extraction: "NoPrefix|UseComma|Enclosed",
@@ -206,20 +184,52 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)
 			DateFormat: {
                 el: new comboBox(config, {
                     no: 'DateFormat',
-                    label: localization.en.DateFormat,
+                    label: convertStringToDate.t('DateFormat'),
                     multiple: false,
                     extraction: "NoPrefix|UseComma",
-                    required: true,
-                    options:["month day", "day month", "month year", "year month", "year month day", "month day year", "day month year", "year only", "month only", "day only"],
+                    required: false,
+                    options:[	"",
+								"month day", 
+								"day month", 
+								"month year", 
+								"year month", 
+								"year month day", 
+								"month day year", 
+								"day month year", 
+								"year only", 
+								"month only", 
+								"day only"
+							],
                     //options: ["%m-%d-%y", "%m-%d-%y %H:%M:%S", "%m-%d-%y %I:%M:%S %p", "%b %d, %y", "%b %d, %y %H:%M:%S", "%m-%d-%Y", "%m-%d-%Y  %H:%M:%S", "%m-%d-%Y %I:%M:%S %p", "%b %d, %Y", "%b %d, %Y %H:%M:%S", "%m/%d/%y", "%m/%d/%y %H:%M:%S", "%m/%d/%y %I:%M:%S %p", "%b %d, %y", "%b %d, %y %H:%M:%S", "%m/%d/%Y", "%m/%d/%Y %H:%M:%S", "%m/%d/%Y %I:%M:%S %p", "%b %d, %Y", "%b %d, %Y %H:%M:%S", "%d-%m-%y", "%d-%m-%y %H:%M:%S", "%d-%m-%y %I:%M:%S %p",
                     //    "%d %b, %y", "%d %b, %y %H:%M:%S", "%d-%m-%Y", "%d-%m-%Y %H:%M:%S", "%d-%m-%Y %I:%M:%S %p", "%d %b, %Y", "%d %b, %Y  %H:%M:%S", "%d/%m/%y", "%d/%m/%y %H:%M:%S", "%d/%m/%y %I:%M:%S %p", "%d %b, %y", "%d %b, %y %H:%M:%S", "%d/%m/%Y", "%d/%m/%Y %H:%M:%S", "%d/%m/%Y %I:%M:%S %p", "%d %b, %Y", "%d %b, %Y  %H:%M:%S", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d", "%Y-%m-%d %I:%M:%S", "%Y-%d-%m", "%Y-%d-%m %H:%M:%S", "%Y-%d-%m %I:%M:%S", "%y-%m-%d", "%y-%m-%d %H:%M:%S", "%y-%m-%d %I:%M:%S",
                     //      "%y-%d-%m", "%y-%d-%m %H:%M:%S", "%y-%d-%m %I:%M:%S", "%Y %m %d  %H:%M:%S", "%Y %m %d", "%Y %m %d %H:%M:%S", "%Y %m %d %I:%M:%S", "%Y %d %m", "%Y %d %m %H:%M:%S", "%Y %d %m %I:%M:%S", "%y %m %d", "%y %m %d %H:%M:%S", "%y %m %d %I:%M:%S", "%y %d %m", "%y %d %m %H:%M:%S", "%y %d %m %I:%M:%S", "%Y %m %d  %H:%M:%S", "%Y %m %d", "%Y %m %d %H:%M:%S", "%Y %m %d %I:%M:%S", "%Y %d %m", "%Y %d %m %H:%M:%S", "%Y %d %m %I:%M:%S", "%y %m %d", "%y %m %d %H:%M:%S", "%y %m %d %I:%M:%S", "%y %d %m", "%y %d %m %H:%M:%S", "%y %d %m %I:%M:%S"]
                 })
             },
+			TimeFormat: {
+                el: new comboBox(config, {
+                    no: 'TimeFormat',
+                    label: convertStringToDate.t('TimeFormat'),
+                    multiple: false,
+                    extraction: "NoPrefix|UseComma",
+                    required: false,
+                    options:[	"",
+								"Hour Min Sec", 
+								"Hour Min Sec Millisec",
+								"Min Sec Millisec",								
+								"Hour Min", 
+								"Min Sec", 
+								"Sec Millisec",  
+								"Hour only", 
+								"Min only", 
+								"Sec only",
+								"Millisec only"
+							],
+				})
+            },
 			missingYear: {
                 el: new input(config, {
                     no: 'missingYear',
-                    label: localization.en.missingYear,
+                    label: convertStringToDate.t('missingYear'),
                     placeholder: "",
                     type: "character",
 					//filter: "String|Numeric|Scale",
@@ -233,7 +243,7 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)
 			missingMonth: {
                 el: new input(config, {
                     no: 'missingMonth',
-                    label: localization.en.missingMonth,
+                    label: convertStringToDate.t('missingMonth'),
                     placeholder: "",
                     type: "character",
                     enforceRobjectRules: false,
@@ -242,10 +252,46 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)
                     value: ""
                 })
             },
-			missingDay: {
+			missingDay: { 
                 el: new input(config, {
                     no: 'missingDay',
-                    label: localization.en.missingDay,
+                    label: convertStringToDate.t('missingDay'),
+                    placeholder: "",
+                    type: "character",
+                    enforceRobjectRules: false,
+                    width: "w-50",
+                    extraction: "TextAsIs",
+                    value: ""
+                })
+            },
+			missingHour: { 
+                el: new input(config, {
+                    no: 'missingHour',
+                    label: convertStringToDate.t('missingHour'),
+                    placeholder: "",
+                    type: "character",
+                    enforceRobjectRules: false,
+                    width: "w-50",
+                    extraction: "TextAsIs",
+                    value: ""
+                })
+            },
+			missingMinute: { 
+                el: new input(config, {
+                    no: 'missingMinute',
+                    label: convertStringToDate.t('missingMinute'),
+                    placeholder: "",
+                    type: "character",
+                    enforceRobjectRules: false,
+                    width: "w-50",
+                    extraction: "TextAsIs",
+                    value: ""
+                })
+            },
+			missingSeconds: { 
+                el: new input(config, {
+                    no: 'missingSeconds',
+                    label: convertStringToDate.t('missingSeconds'),
                     placeholder: "",
                     type: "character",
                     enforceRobjectRules: false,
@@ -258,7 +304,7 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)
             TimeZone: {
                 el: new comboBox(config, {
                     no: 'TimeZone',
-                    label: localization.en.TimeZone,
+                    label: convertStringToDate.t('TimeZone'),
                     multiple: true,
                     extraction: "NoPrefix|UseComma",
                     options: [],
@@ -274,7 +320,10 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)
                     //objects.TimeZone.el, 
 					objects.missingYear.el,
 					objects.missingMonth.el,
-					objects.missingDay.el,
+					objects.missingDay.el, 
+					objects.missingHour.el,
+					objects.missingMinute.el,
+					objects.missingSeconds.el,
                 ]
             }
             )
@@ -282,17 +331,26 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)
         const content = {
             head: [objects.labelInfo.el.content, objects.label1.el.content, objects.suffix.el.content, objects.prefix.el.content, objects.prefixOrSuffix.el.content],
             left: [objects.content_var.el.content],
-            right: [objects.Destination.el.content, objects.DateFormat.el.content,],
+            right: [objects.Destination.el.content, objects.DateFormat.el.content, objects.TimeFormat.el.content,],
             bottom: [timeZoneOptions.el.content],
             nav: {
-                name: localization.en.navigation,
+                name: convertStringToDate.t('navigation'),
                 icon: "icon-calendar-1",
                 onclick: `r_before_modal("${config.id}")`,
                 modal_id: config.id
             }
         }
         super(config, objects, content);
-        this.help = localization.en.help;
+        
+        this.help = {
+            title: convertStringToDate.t('help.title'),
+            r_help: "help(data,package='utils')",
+            body: convertStringToDate.t('help.body')
+        }
+;
     }
 }
-module.exports.item = new convertCharacterToDate().render()
+
+module.exports = {
+    render: () => new convertStringToDate().render()
+}

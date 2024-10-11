@@ -1,60 +1,5 @@
 
-var localization = {
-    en: {
-        title: "Specify levels to keep or replace by other",
-        navigation: "Lump into Other (Manually)",
-        target: "Factor variables to reorder",
-        label1: "Enter the factor levels to keep or replace by other. When levels to keep is selected, remaining levels will be replaced by \"Other\". When replace is selected, specified levels will be replaced by \"Other\"",
-        other: "Level name used for \"Other\" values",
-        label3: "Method to use",
-        keep: "Keep levels",
-        drop: "Drop levels",
-        keepOption: "Enter levels to keep separated by , remaining levels will be replaced by \"Other\" for e.g. level1,level2,level3",
-        dropOption: "Enter levels to replace by \"Other\" for e.g. level1,level2,level3",
-        label2: "Save results to new variable(s) or overwrite existing variable(s)",
-        rd3: "Specify a suffix (A new variable will be created with the suffix) ",
-        txt3: "Enter a suffix",
-        rd2: "Specify a prefix (A new variable will be created with the prefix) ",
-        txt4: "Enter a prefix",
-        rd1: "Overwrite  existing variables",
-        help: {
-            title: "Levels to keep or replace",
-            r_help: "help(fct_other, package =forcats)",
-            body: `
-<b>NOTE: DON'T ENCLOSE LEVELS IN DOUBLE QUOTES OR SINGLE QUOTES, THERE CANNOT BE SPACES IN THE LEVEL NAMES. ENTER LEVELS SEPARATED BY COMMAS IN THE FORMAT LEVEL1,LEVEL2, LEVEL3</b><br/>
-<b>Description</b></br>
-Enter the factor levels to keep or drop. When keep is selected, remaining levels will be replaced by "Other". When drop is selected, dropped levels will be replaced by "Other"
-<br/>
-<b>Usage</b>
-<br/>
-<code> 
-fct_other(f, keep, drop, other_level = "Other")
-</code> <br/>
-<b>Arguments</b><br/>
-<ul>
-<li>
-f :A factor (or character vector).
-</li>
-<li>
-keep, drop: keep will preserve listed levels, replacing all others with other_level. drop will replace listed levels with other_level, keeping all others as they are.
-</li>
-<li>
-other_level: Value of level used for "other" values. Always placed at end of levels.
-</li>
-</ul>
-<b>Examples</b></br>
-<code>
-x <- factor(rep(LETTERS[1:9], times = c(40, 10, 5, 27, 1, 1, 1, 1, 1)))<br/>
-fct_other(x, keep = c("A", "B"))<br/>
-fct_other(x, drop = c("A", "B"))<br/>
-</code> <br/>
-<b>Package</b></br>
-forcats</br>
-<b>Help</b></br>
-help(fct_other, package =forcats)
-    `}
-    }
-}
+
 
 
 
@@ -64,10 +9,13 @@ help(fct_other, package =forcats)
 
 
 class specifyLevelsToKeepOrReplace extends baseModal {
+    static dialogId = 'specifyLevelsToKeepOrReplace'
+    static t = baseModal.makeT(specifyLevelsToKeepOrReplace.dialogId)
+
     constructor() {
         var config = {
-            id: "specifyLevelsToKeepOrReplace",
-            label: localization.en.title,
+            id: specifyLevelsToKeepOrReplace.dialogId,
+            label: specifyLevelsToKeepOrReplace.t('title'),
             modalType: "two",
             splitProcessing:false,
             RCode: `
@@ -89,11 +37,11 @@ require(forcats);
             `
         }
         var objects = {
-            label1: { el: new labelVar(config, { label: localization.en.label1, h: 6 }) },
+            label1: { el: new labelVar(config, { label: specifyLevelsToKeepOrReplace.t('label1'), h: 6 }) },
             content_var: { el: new srcVariableList(config, {action: "move", scroll:true}) },
             target: {
                 el: new dstVariableList(config, {
-                    label: localization.en.target,
+                    label: specifyLevelsToKeepOrReplace.t('target'),
                     no: "target",
                     filter: "Numeric|Ordinal|Nominal",
                     extraction: "NoPrefix|UseComma",
@@ -103,7 +51,7 @@ require(forcats);
             other: {
                 el: new input(config, {
                     no: 'other',
-                    label: localization.en.other,
+                    label: specifyLevelsToKeepOrReplace.t('other'),
                     placeholder: "",
                     allow_spaces:true,
                     extraction: "TextAsIs",
@@ -112,12 +60,12 @@ require(forcats);
                     type: "character",
                 }),
             },
-            label3: { el: new labelVar(config, { label: localization.en.label3,style: "mt-3",h: 5 }) },
-            keepOption: { el: new radioButton(config, { label: localization.en.keepOption, no: "method", required: true, increment: "keepOption", value: "keepOption", state: "checked", extraction: "ValueAsIs", dependant_objects: ["keep"] }) },
+            label3: { el: new labelVar(config, { label: specifyLevelsToKeepOrReplace.t('label3'),style: "mt-3",h: 5 }) },
+            keepOption: { el: new radioButton(config, { label: specifyLevelsToKeepOrReplace.t('keepOption'), no: "method", required: true, increment: "keepOption", value: "keepOption", state: "checked", extraction: "ValueAsIs", dependant_objects: ["keep"] }) },
             keep: {
                 el: new input(config, {
                     no: 'keep',
-                    label: localization.en.keep,
+                    label: specifyLevelsToKeepOrReplace.t('keep'),
                     placeholder: "",
                     allow_spaces:true,
                     extraction: "TextAsIs",
@@ -126,11 +74,11 @@ require(forcats);
                     type: "character",
                 }),
             },
-            dropOption: { el: new radioButton(config, { label: localization.en.dropOption, no: "method", required: true, increment: "dropOption", value: "dropOption", state: "", extraction: "ValueAsIs", dependant_objects: ["drop"] }) },
+            dropOption: { el: new radioButton(config, { label: specifyLevelsToKeepOrReplace.t('dropOption'), no: "method", required: true, increment: "dropOption", value: "dropOption", state: "", extraction: "ValueAsIs", dependant_objects: ["drop"] }) },
             drop: {
                 el: new input(config, {
                     no: 'drop',
-                    label: localization.en.drop,
+                    label: specifyLevelsToKeepOrReplace.t('drop'),
                     placeholder: "",
                     extraction: "TextAsIs",
                     allow_spaces:true,
@@ -139,12 +87,12 @@ require(forcats);
                     type: "character",
                 }),
             },
-            label2: { el: new labelVar(config, { label: localization.en.label2,style: "mt-3",h: 5}) },
-            rd3: { el: new radioButton(config, { label: localization.en.rd3, no: "grp10", required: true, dependant_objects: ["txt3"], increment: "rd3", value: "Suffix", state: "checked", extraction: "ValueAsIs", }) },
+            label2: { el: new labelVar(config, { label: specifyLevelsToKeepOrReplace.t('label2'),style: "mt-3",h: 5}) },
+            rd3: { el: new radioButton(config, { label: specifyLevelsToKeepOrReplace.t('rd3'), no: "grp10", required: true, dependant_objects: ["txt3"], increment: "rd3", value: "Suffix", state: "checked", extraction: "ValueAsIs", }) },
             txt3: {
                 el: new input(config, {
                     no: 'txt3',
-                    label: localization.en.txt3,
+                    label: specifyLevelsToKeepOrReplace.t('txt3'),
                     placeholder: "",
                     extraction: "TextAsIs",
                     value: "",
@@ -152,11 +100,11 @@ require(forcats);
                     type: "character"
                 }),
             },
-            rd2: { el: new radioButton(config, { label: localization.en.rd2, no: "grp10", required: true, dependant_objects: ["txt4"], increment: "rd2", value: "Prefix", state: "", extraction: "ValueAsIs", }) },
+            rd2: { el: new radioButton(config, { label: specifyLevelsToKeepOrReplace.t('rd2'), no: "grp10", required: true, dependant_objects: ["txt4"], increment: "rd2", value: "Prefix", state: "", extraction: "ValueAsIs", }) },
             txt4: {
                 el: new input(config, {
                     no: 'txt4',
-                    label: localization.en.txt4,
+                    label: specifyLevelsToKeepOrReplace.t('txt4'),
                     placeholder: "",
                     extraction: "TextAsIs",
                     value: "",
@@ -164,20 +112,26 @@ require(forcats);
                     type: "character"
                 }),
             },
-            rd1: { el: new radioButton(config, { label: localization.en.rd1, no: "grp10", increment: "rd1", value: "Overwrite", state: "", extraction: "ValueAsIs" }) },
+            rd1: { el: new radioButton(config, { label: specifyLevelsToKeepOrReplace.t('rd1'), no: "grp10", increment: "rd1", value: "Overwrite", state: "", extraction: "ValueAsIs" }) },
         }
         const content = {
             head: [objects.label1.el.content],
             left: [objects.content_var.el.content],
             right: [objects.target.el.content, objects.other.el.content, objects.label3.el.content, objects.keepOption.el.content, objects.keep.el.content, objects.dropOption.el.content, objects.drop.el.content, objects.label2.el.content, objects.rd3.el.content, objects.txt3.el.content, objects.rd2.el.content, objects.txt4.el.content, objects.rd1.el.content],
             nav: {
-                name: localization.en.navigation,
+                name: specifyLevelsToKeepOrReplace.t('navigation'),
                 icon: "icon-hand_pointing",
                 modal: config.id
             }
         }
         super(config, objects, content);
-        this.help = localization.en.help;
+        
+        this.help = {
+            title: specifyLevelsToKeepOrReplace.t('help.title'),
+            r_help: "help(data,package='utils')",
+            body: specifyLevelsToKeepOrReplace.t('help.body')
+        }
+;
     }
     prepareExecution(instance) {
         var res = [];
@@ -206,4 +160,7 @@ require(forcats);
         return res;
     }
 }
-module.exports.item = new specifyLevelsToKeepOrReplace().render()
+
+module.exports = {
+    render: () => new specifyLevelsToKeepOrReplace().render()
+}

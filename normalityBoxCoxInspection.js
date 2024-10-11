@@ -1,59 +1,14 @@
 
-var localization = {
-    en: {
-        title: "Lambda (λ) value for variables with prior Box-Cox transformation",
-		navigation: "Inspect Lambda",
-		
-		label2: "Select one or more variables to check whether Box-Cox transformation was applied and if so, the associated Lambda (λ) value",
-		
-		variablelistSelcted: "Variables to be inspected",
-		//digits: "Digits - rounds to the specified number of decimal places",
-		
-		help: {
-            title: "Check for Lambda (λ) value associated with the slected variable",
-            r_help: "help(boxcox, package = MASS)",
-			body: `
-				<b>Description</b></br>
-				Check for the associated Lambda (λ) value, if any, for the selected variables with prior Box-Cox transformation 
-				<br/>
-				<br/>
-				For the detail help on Box-Cox or Lambda (λ) - use R help(boxcox, package = MASS)
-				<br/>
-				<br/>
-				<a href="https://www.css.cornell.edu/faculty/dgr2/_static/files/R_html/Transformations.html">For a good overview of MASS Box-Cox, see https://www.css.cornell.edu/faculty/dgr2/_static/files/R_html/Transformations.html</a>
-				<br/>
-				<br/>
-				Lambda (λ) values associated with familiar Box-Cox transformations 
-				<br/>
-				λ = 2: square transformation ( x^2 )
-				<br/>
-				λ = 1: no transformation; returns the original data ( x )
-				<br/>
-				λ = 0.50: square root transformation ( sqrt(x) )
-				<br/>
-				λ = 0.33: cube root transformation
-				<br/>
-				λ = 0.25: fourth root transformation
-				<br/>
-				λ = 0: natural log transformation ( log(x) )
-				<br/>
-				λ = - 0.50: reciprocal square root transformation ( 1/sqrt(x) )
-				<br/>
-				λ = - 1: reciprocal (inverse) transformation ( 1/x )
-				<br/>
-				λ = - 2: reciprocal square transformation ( 1/x^2 )
-				<br/>
-				<br/>
-			`
-		},
-	}
-}
+
 
 class inspectBoxCoxLambda extends baseModal {
+    static dialogId = 'inspectBoxCoxLambda'
+    static t = baseModal.makeT(inspectBoxCoxLambda.dialogId)
+
     constructor() {
         var config = {
-            id: "inspectBoxCoxLambda",
-            label: localization.en.title,
+            id: inspectBoxCoxLambda.dialogId,
+            label: inspectBoxCoxLambda.t('title'),
             modalType: "two",
             RCode:`
 
@@ -87,7 +42,7 @@ require(MASS)
             content_var: { el: new srcVariableList(config, {action: "move", scroll:true}) }, 
 			variablelistSelcted: {
                 el: new dstVariableList(config, {
-                    label: localization.en.variablelistSelcted,
+                    label: inspectBoxCoxLambda.t('variablelistSelcted'),
                     no: "variablelistSelcted",
                     required: false,
                     filter: "Numeric|Scale",
@@ -99,7 +54,7 @@ require(MASS)
 			digits: {
                 el: new inputSpinner(config, {
                     no: 'digits',
-                    label: localization.en.digits,
+                    label: inspectBoxCoxLambda.t('digits'),
                     required: true,
                     min: 0,
                     max: 15,
@@ -112,7 +67,7 @@ require(MASS)
 			*/
 			label2: { 
 				el: new labelVar(config, { 
-					label: localization.en.label2, 
+					label: inspectBoxCoxLambda.t('label2'), 
 					h: 6, 
 					style: "mb-2",
 				}) 
@@ -120,7 +75,7 @@ require(MASS)
 			/*
 			variableSelcted: {
                 el: new dstVariable(config, {
-                    label: localization.en.variableSelcted,
+                    label: inspectBoxCoxLambda.t('variableSelcted'),
                     no: "variableSelcted",
                     required: false,
                     //filter: "String|Numeric|Logical|Ordinal|Nominal|Scale",
@@ -140,13 +95,22 @@ require(MASS)
 					//objects.digits.el.content
 					],
             nav: {
-                name: localization.en.navigation,
+                name: inspectBoxCoxLambda.t('navigation'),
                 icon: "icon-gaussian-function",
                 modal: config.id
             }
         };
         super(config, objects, content);
-        this.help = localization.en.help;
+        
+        this.help = {
+            title: inspectBoxCoxLambda.t('help.title'),
+            r_help: "help(data,package='utils')",
+            body: inspectBoxCoxLambda.t('help.body')
+        }
+;
     }
 }
-module.exports.item = new inspectBoxCoxLambda().render()
+
+module.exports = {
+    render: () => new inspectBoxCoxLambda().render()
+}

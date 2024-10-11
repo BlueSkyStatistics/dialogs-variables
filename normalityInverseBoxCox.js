@@ -1,69 +1,14 @@
 
-var localization = {
-    en: {
-        title: "Inverse Box-Cox transformation (convert back to non-transformed value)",
-		navigation: "Inverse Box-Cox",
-		
-		label2: "Select a variable or type in numeric value to be converted back from a prior Box-Cox transformation with the Lambda (λ) value",
-		
-		variableSelcted: "Select a variable",
-		//digits: "Digits - rounds to the specified number of decimal places",
-		
-		selectVariableRad: "Option 1: Select a variable to be converted back from a prior Box-Cox transformation",
-		invBoxCoxColName: "(Optional) Specify a new variable name to store the converted values. Otherwise <variable_Invbcox> will be created",
-		
-		selectNumberRad: "Option 2: Type in a numeric value to be converted back from Box-Cox transformation",
-		invNumber: "Type in the numeric value",
-		
-		lambda: "(Optional) Specify a Lambda (λ) value in (-2 to 2) to be used to convert back from Box-Cox transformation. Otherwise, if left blank, the Lambda (λ) value wil be used that was used for the original Box-Cox tranformation for the variable selected above",
-		
-		digits: "Digits - rounds to the specified number of decimal places",
-		
-		help: {
-            title: "Transform back (inverse) from a prior Box-Cox transformed value",
-            r_help: "help(boxcox, package = MASS)",
-			body: `
-				<b>Description</b></br>
-				Transform back (inverse) from a prior Box-Cox transformed value using the specified lambda or the lambda associated with the variable selected 
-				<br/>
-				<br/>
-				For the detail help on Box-Cox or Lambda (λ) - use R help(boxcox, package = MASS)
-				<br/>
-				<br/>
-				<a href="https://www.css.cornell.edu/faculty/dgr2/_static/files/R_html/Transformations.html">For a good overview of MASS Box-Cox, see https://www.css.cornell.edu/faculty/dgr2/_static/files/R_html/Transformations.html</a>
-				<br/>
-				<br/>
-				Lambda (λ) values associated with familiar Box-Cox transformations 
-				<br/>
-				λ = 2: square transformation ( x^2 )
-				<br/>
-				λ = 1: no transformation; returns the original data ( x )
-				<br/>
-				λ = 0.50: square root transformation ( sqrt(x) )
-				<br/>
-				λ = 0.33: cube root transformation
-				<br/>
-				λ = 0.25: fourth root transformation
-				<br/>
-				λ = 0: natural log transformation ( log(x) )
-				<br/>
-				λ = - 0.50: reciprocal square root transformation ( 1/sqrt(x) )
-				<br/>
-				λ = - 1: reciprocal (inverse) transformation ( 1/x )
-				<br/>
-				λ = - 2: reciprocal square transformation ( 1/x^2 )
-				<br/>
-				<br/>
-			`
-		},
-	}
-}
+
 
 class inverseBoxCoxTransform extends baseModal {
+    static dialogId = 'inverseBoxCoxTransform'
+    static t = baseModal.makeT(inverseBoxCoxTransform.dialogId)
+
     constructor() {
         var config = {
-            id: "inverseBoxCoxTransform",
-            label: localization.en.title,
+            id: inverseBoxCoxTransform.dialogId,
+            label: inverseBoxCoxTransform.t('title'),
             modalType: "two",
             RCode:`
 
@@ -167,7 +112,7 @@ origLambda = NULL
 			/*
 			variablelistSelcted: {
                 el: new dstVariableList(config, {
-                    label: localization.en.variablelistSelcted,
+                    label: inverseBoxCoxTransform.t('variablelistSelcted'),
                     no: "variablelistSelcted",
                     required: false,
                     filter: "Numeric|Scale",
@@ -180,7 +125,7 @@ origLambda = NULL
 			digits: {
                 el: new inputSpinner(config, {
                     no: 'digits',
-                    label: localization.en.digits,
+                    label: inverseBoxCoxTransform.t('digits'),
                     required: true,
                     min: 0,
                     max: 15,
@@ -192,14 +137,14 @@ origLambda = NULL
             }, 
 			label2: { 
 				el: new labelVar(config, { 
-					label: localization.en.label2, 
+					label: inverseBoxCoxTransform.t('label2'), 
 					h: 6, 
 					style: "mb-2",
 				}) 
 			},
 			variableSelcted: {
                 el: new dstVariable(config, {
-                    label: localization.en.variableSelcted,
+                    label: inverseBoxCoxTransform.t('variableSelcted'),
                     no: "variableSelcted",
                     required: false,
                     //filter: "String|Numeric|Logical|Ordinal|Nominal|Scale",
@@ -211,7 +156,7 @@ origLambda = NULL
 			lambda: {
                 el: new input(config, {
                     no: 'lambda',
-                    label: localization.en.lambda,
+                    label: inverseBoxCoxTransform.t('lambda'),
                     placeholder: "",
                     required: false,
                     type: "numeric",
@@ -227,7 +172,7 @@ origLambda = NULL
 			invBoxCoxColName: {
                 el: new input(config, {
                     no: 'invBoxCoxColName',
-                    label: localization.en.invBoxCoxColName,
+                    label: inverseBoxCoxTransform.t('invBoxCoxColName'),
                     placeholder: "",
                     required: false,
                     type: "character",
@@ -241,7 +186,7 @@ origLambda = NULL
 			invNumber: {
                 el: new input(config, {
                     no: 'invNumber',
-                    label: localization.en.invNumber,
+                    label: inverseBoxCoxTransform.t('invNumber'),
                     placeholder: "",
                     required: false,
                     type: "numeric",
@@ -254,7 +199,7 @@ origLambda = NULL
             },
 			selectVariableRad: {
                 el: new radioButton(config, {
-                    label: localization.en.selectVariableRad,
+                    label: inverseBoxCoxTransform.t('selectVariableRad'),
                     no: "gpbox1",
                     increment: "selectVariableRad",
                     value: "variable",
@@ -264,7 +209,7 @@ origLambda = NULL
             },
 			selectNumberRad: {
                 el: new radioButton(config, {
-                    label: localization.en.selectNumberRad,
+                    label: inverseBoxCoxTransform.t('selectNumberRad'),
                     no: "gpbox1",
                     increment: "selectNumberRad",
                     value: "number",
@@ -292,13 +237,22 @@ origLambda = NULL
 					objects.digits.el.content
 					],
             nav: {
-                name: localization.en.navigation,
+                name: inverseBoxCoxTransform.t('navigation'),
                 icon: "icon-gaussian-function",
                 modal: config.id
             }
         };
         super(config, objects, content);
-        this.help = localization.en.help;
+        
+        this.help = {
+            title: inverseBoxCoxTransform.t('help.title'),
+            r_help: "help(data,package='utils')",
+            body: inverseBoxCoxTransform.t('help.body')
+        }
+;
     }
 }
-module.exports.item = new inverseBoxCoxTransform().render()
+
+module.exports = {
+    render: () => new inverseBoxCoxTransform().render()
+}

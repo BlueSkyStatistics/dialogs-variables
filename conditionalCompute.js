@@ -1,58 +1,14 @@
 
-var localization = {
-    en: {
-        title: "Conditional Compute",
-        navigation: "Conditional Compute",
-        label1: "=",
-        newvar: "New/Existing Variable name (no spaces/special characters):",
-        formulaBuilderCondition: "Specify a condition e.g. var1 > 10",
-        formulaBuilderConditionTrue: "Value when condition is TRUE",
-        formulaBuilderConditionFalse: "Value when condition is FALSE",
-        placeHolder1: "For eg. gpa == 4",
-        placeHolder2: "For eg. \"Honors student\"",
-        placeHolder3: "For eg. \"Regular student\"",
-        label2: "Construct the appropriate compute command using the expression builder below, for e.g. var1+var2, as.numeric(var2), substr(var4,2,4)...",
-        formula: "Construct a compute command",
-        help: {
-            title: "Compute Variable(s)",
-            r_help: "help(log, package ='base')",
-            body: `
-<b>Description</b></br>
-Computes an expression and stores the result in a variable/column of a dataframe/dataset</br>
-<br/>
-<b>Usage</b>
-<br/>
-<code> 
-DatasetX <- DatasetX %>% mutate ( var1 = Expression)​<br/>
-DatasetX <- DatasetX %>% mutate ( var1 = var2 + var3)​
-</code> <br/>
-<b>Arguments</b><br/>
-<ul>
-<li>
-DatasetX:  dataframe/dataset name.​
-</li>
-<li>
-var1: The new/existing column in the dataset/dataframe that needs to be computed
-</li>
-<li>
-Expression: An expression in the form variable1 =variable2+variable3
-</li>
-</ul>
-<b>Details</b></br>
-Evaluates the expression and stores the result in variable/column of a dataframe/dataset</br>
-<b>Package</b></br>
-dplyr</br>
-<b>Help</b></br>
-For detailed help click on the R icon on the top right hand side of this dialog overlay or run the following command help(mutate, package ='dplyr') in the R editor window
-            `}
-    }
-}
+
 
 class conditionalCompute extends baseModal {
+    static dialogId = 'conditionalCompute'
+    static t = baseModal.makeT(conditionalCompute.dialogId)
+
     constructor() {
         var config = {
-            id: "conditionalCompute",
-            label: localization.en.title,
+            id: conditionalCompute.dialogId,
+            label: conditionalCompute.t('title'),
             splitProcessing:false,
             modalType: "two",
             RCode: `
@@ -75,7 +31,7 @@ BSkyLoadRefresh("{{dataset.name}}")
             newvar: {
                 el: new input(config, {
                     no: 'newvar',
-                    label: localization.en.newvar,
+                    label: conditionalCompute.t('newvar'),
                     placeholder: "",
                     extraction: "TextAsIs",
                     value: "",
@@ -88,24 +44,24 @@ BSkyLoadRefresh("{{dataset.name}}")
                 el: new computeBuilder(config, {
                     no: "formulaBuilderCondition",
                     required:true,
-                    label :localization.en.formulaBuilderCondition,
-                    placeHolder: localization.en.placeHolder1
+                    label :conditionalCompute.t('formulaBuilderCondition'),
+                    placeHolder: conditionalCompute.t('placeHolder1')
                 })
             },
             formulaBuilderConditionTrue: {
                 el: new computeBuilder(config, {
                     no: "formulaBuilderConditionTrue",
                     required:true,
-                    label :localization.en.formulaBuilderConditionTrue,
-                    placeHolder: localization.en.placeHolder2
+                    label :conditionalCompute.t('formulaBuilderConditionTrue'),
+                    placeHolder: conditionalCompute.t('placeHolder2')
                 })
             },
             formulaBuilderConditionFalse: {
                 el: new computeBuilder(config, {
                     no: "formulaBuilderConditionFalse",
                     required:true,
-                    label :localization.en.formulaBuilderConditionFalse,
-                    placeHolder: localization.en.placeHolder3
+                    label :conditionalCompute.t('formulaBuilderConditionFalse'),
+                    placeHolder: conditionalCompute.t('placeHolder3')
                 })
             },
         }
@@ -113,13 +69,22 @@ BSkyLoadRefresh("{{dataset.name}}")
             left: [objects.content_var.el.content],
             right: [objects.newvar.el.content, objects.formulaBuilderCondition.el.content,objects.formulaBuilderConditionTrue.el.content,objects.formulaBuilderConditionFalse.el.content],
             nav: {
-                name: localization.en.navigation,
+                name: conditionalCompute.t('navigation'),
                 icon: "icon-sqrt_qmark",
                 modal: config.id
             }
         }
         super(config, objects, content);
-        this.help = localization.en.help;
+        
+        this.help = {
+            title: conditionalCompute.t('help.title'),
+            r_help: "help(data,package='utils')",
+            body: conditionalCompute.t('help.body')
+        }
+;
     }
 }
-module.exports.item = new conditionalCompute().render()
+
+module.exports = {
+    render: () => new conditionalCompute().render()
+}

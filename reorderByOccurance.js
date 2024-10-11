@@ -1,54 +1,5 @@
 
-var localization = {
-    en: {
-        title: "Reorder Factor Levels by Occurrence",
-        navigation: "Reorder by Occurrence",
-        target: "Factor variables to re-order levels",
-        label1: "Select the factor variables to reorder by occurrence of data in the variable. You can overwrite existing variables or create new variables by specifying a prefix/suffix. New variables will be created with the prefix/suffix appended to existing names.",
-        label2: "Save new levels to new variable(s) or overwrite existing variable(s)",
-        rd3: "Specify a suffix (A new variable will be created with the suffix) ",
-        txt3: "Enter a suffix",
-        rd2: "Specify a prefix (A new variable will be created with the prefix) ",
-        txt4: "Enter a prefix",
-        rd1: "Overwrite  existing variables",
-        label3: "Specify an order",
-        Descending: "In the order of occurrence",
-        Ascending: "In the reverse order of occurrence",
-        ordered: "Make an ordered factor (ordinal)",
-        help: {
-            title: "Remove NAs",
-            r_help: "help(fct_inorder, package=forcats)",
-            body: `
-<b>Description</b></br>
-Reorder factors levels by first appearance (occurence). See reorder by count for ordering by count/frequency.
-<br/>
-<b>Usage</b>
-<br/>
-<code> 
-fct_inorder(f, ordered = NA)</br>
-</code> <br/>
-<b>Arguments</b><br/>
-<ul>
-<li>
-f: A factor
-</li>
-<li>
-ordered: A logical which determines the "ordered" status of the output factor. NA preserves the existing status of the factor.
-</li>
-</ul>
-<b>Examples</b>
-<code></br>
-f <- factor(c("b", "b", "a", "c", "c", "c"))</br>
-f</br>
-fct_inorder(f)</br>
-fct_infreq(f)</br>
-fct_inorder(f, ordered = TRUE)</br>
-f <- factor(sample(1:10))</br>
-fct_inseq(f)</br>
-</code>
-`}
-    }
-}
+
 
 
 
@@ -58,10 +9,13 @@ fct_inseq(f)</br>
 
 
 class reorderByOccurance extends baseModal {
+    static dialogId = 'reorderByOccurance'
+    static t = baseModal.makeT(reorderByOccurance.dialogId)
+
     constructor() {
         var config = {
-            id: "reorderByOccurance",
-            label: localization.en.title,
+            id: reorderByOccurance.dialogId,
+            label: reorderByOccurance.t('title'),
             modalType: "two",
             splitProcessing:false,
             RCode: `
@@ -83,23 +37,23 @@ require(forcats);
 `
         }
         var objects = {
-            label1: { el: new labelVar(config, { label: localization.en.label1, h: 6 }) },
+            label1: { el: new labelVar(config, { label: reorderByOccurance.t('label1'), h: 6 }) },
             content_var: { el: new srcVariableList(config, {action: "move", scroll:true}) },
             target: {
                 el: new dstVariableList(config, {
-                    label: localization.en.target,
+                    label: reorderByOccurance.t('target'),
                     no: "target",
                     filter: "Numeric|Ordinal|Nominal",
                     extraction: "NoPrefix|UseComma",
                     required: true,
                 }), r: ['{{ target | safe}}']
             },
-            label2: { el: new labelVar(config, { label: localization.en.label2, style: "mt-3",h: 5 }) },
-            rd3: { el: new radioButton(config, { label: localization.en.rd3, no: "grp10", increment: "rd3", required: true, dependant_objects: ["txt3"], value: "Suffix", state: "checked", extraction: "ValueAsIs", }) },
+            label2: { el: new labelVar(config, { label: reorderByOccurance.t('label2'), style: "mt-3",h: 5 }) },
+            rd3: { el: new radioButton(config, { label: reorderByOccurance.t('rd3'), no: "grp10", increment: "rd3", required: true, dependant_objects: ["txt3"], value: "Suffix", state: "checked", extraction: "ValueAsIs", }) },
             txt3: {
                 el: new input(config, {
                     no: 'txt3',
-                    label: localization.en.txt3,
+                    label: reorderByOccurance.t('txt3'),
                     placeholder: "",
                     extraction: "TextAsIs",
                     value: "",
@@ -107,11 +61,11 @@ require(forcats);
                     type: "character"
                 }),
             },
-            rd2: { el: new radioButton(config, { label: localization.en.rd2, no: "grp10", increment: "rd2", required: true, dependant_objects: ["txt4"], value: "Prefix", state: "", extraction: "ValueAsIs", }) },
+            rd2: { el: new radioButton(config, { label: reorderByOccurance.t('rd2'), no: "grp10", increment: "rd2", required: true, dependant_objects: ["txt4"], value: "Prefix", state: "", extraction: "ValueAsIs", }) },
             txt4: {
                 el: new input(config, {
                     no: 'txt4',
-                    label: localization.en.txt4,
+                    label: reorderByOccurance.t('txt4'),
                     placeholder: "",
                     extraction: "TextAsIs",
                     value: "",
@@ -119,24 +73,30 @@ require(forcats);
                     type: "character"
                 }),
             },
-            rd1: { el: new radioButton(config, { label: localization.en.rd1, no: "grp10", increment: "rd1", value: "Overwrite", state: "", extraction: "ValueAsIs" }) },
-            label3: { el: new labelVar(config, { label: localization.en.label3, style: "mt-3",h: 5}) },
-            Descending: { el: new radioButton(config, { label: localization.en.Descending, no: "specifyOrder", increment: "Descending", value: "Descending", state: "checked", extraction: "ValueAsIs", }) },
-            Ascending: { el: new radioButton(config, { label: localization.en.Ascending, no: "specifyOrder", increment: "Ascending", value: "Ascending", state: "", extraction: "ValueAsIs", }) },
-            ordered: { el: new checkbox(config, { label: localization.en.ordered, style: "mt-4",no: "ordered", extraction: "Boolean" }) },
+            rd1: { el: new radioButton(config, { label: reorderByOccurance.t('rd1'), no: "grp10", increment: "rd1", value: "Overwrite", state: "", extraction: "ValueAsIs" }) },
+            label3: { el: new labelVar(config, { label: reorderByOccurance.t('label3'), style: "mt-3",h: 5}) },
+            Descending: { el: new radioButton(config, { label: reorderByOccurance.t('Descending'), no: "specifyOrder", increment: "Descending", value: "Descending", state: "checked", extraction: "ValueAsIs", }) },
+            Ascending: { el: new radioButton(config, { label: reorderByOccurance.t('Ascending'), no: "specifyOrder", increment: "Ascending", value: "Ascending", state: "", extraction: "ValueAsIs", }) },
+            ordered: { el: new checkbox(config, { label: reorderByOccurance.t('ordered'), style: "mt-4",no: "ordered", extraction: "Boolean" }) },
         }
         const content = {
             head: [objects.label1.el.content],
             left: [objects.content_var.el.content],
             right: [objects.target.el.content, objects.label3.el.content, objects.Descending.el.content, objects.Ascending.el.content, objects.ordered.el.content, objects.label2.el.content, objects.rd3.el.content, objects.txt3.el.content, objects.rd2.el.content, objects.txt4.el.content, objects.rd1.el.content],
             nav: {
-                name: localization.en.navigation,
+                name: reorderByOccurance.t('navigation'),
                 icon: "icon-rank",
                 modal: config.id
             }
         }
         super(config, objects, content);
-        this.help = localization.en.help;
+        
+        this.help = {
+            title: reorderByOccurance.t('help.title'),
+            r_help: "help(data,package='utils')",
+            body: reorderByOccurance.t('help.body')
+        }
+;
     }
     prepareExecution(instance) {
         var res = [];
@@ -163,4 +123,7 @@ require(forcats);
         return res;
     }
 }
-module.exports.item = new reorderByOccurance().render()
+
+module.exports = {
+    render: () => new reorderByOccurance().render()
+}

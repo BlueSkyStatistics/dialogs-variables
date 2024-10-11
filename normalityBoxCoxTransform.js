@@ -1,75 +1,14 @@
 
-var localization = {
-    en: {
-        title: "Box-Cox transformation of non normal data to normal",
-		navigation: "Box-Cox transformation",
-		
-		label2: "Two options - either select a non-normal variable to be transformed to normal or select the entire dataset to be transformed",
-		
-		selectVariableRad: "Option 1: Select a non-normal variable from the dataset to be transformed to normal",
-		variableSelcted: "A non-normal variable to be transformed",
-		boxcoxColName: "(Optional) Specify a new variable name to store the transformed values. Otherwise <variable_bcox> will be created",
-		
-		selectDatasetRad: "Option 2: Transform the entire Dataset to normal",
-		boxcoxDatasetName: "(Optional) Specify a new dataset name to store the transformed values. Otherwise <dataset_bcox> will be created", 
-		johnsonDatasetName: "(Optional) Specify a new dataset name for Johnson (required if option 2 is chosen above)",
-		
-		boxcoxChk: "Box-Cox transformation",
-		johnsonChk: "Johnson transformation",
-		
-		lambda: "(Optional) Lambda (λ) value in (-2 to 2) to be used for Box-Cox transformation. If not specified, it will automatically identify the best Lambda value",
-		
-		digits: "Digits - rounds to the specified number of decimal places",
-		
-		//For a quick overview of Johnson transformation, see https://rdrr.io/cran/Johnson/man/RE.Johnson.html
-		
-		help: {
-            title: "Transform non-normal data to normal",
-            r_help: "help(boxcox, package = MASS)",
-			body: `
-				<b>Description</b></br>
-				Function to transform non-normal variable to normal with MASS::boxcox 
-				<br/>
-				Box-Cox transformation cannot be performed on negaive values
-				<br/>
-				<br/>
-				For the detail help - use R help(boxcox, package = MASS)
-				<br/>
-				<br/>
-				<a href="https://www.css.cornell.edu/faculty/dgr2/_static/files/R_html/Transformations.html">For a good overview of MASS Box-Cox, see https://www.css.cornell.edu/faculty/dgr2/_static/files/R_html/Transformations.html</a>
-				<br/>
-				<br/>
-				Lambda (λ) values associated with familiar Box-Cox transformations 
-				<br/>
-				λ = 2: square transformation ( x^2 )
-				<br/>
-				λ = 1: no transformation; returns the original data ( x )
-				<br/>
-				λ = 0.50: square root transformation ( sqrt(x) )
-				<br/>
-				λ = 0.33: cube root transformation
-				<br/>
-				λ = 0.25: fourth root transformation
-				<br/>
-				λ = 0: natural log transformation ( log(x) )
-				<br/>
-				λ = - 0.50: reciprocal square root transformation ( 1/sqrt(x) )
-				<br/>
-				λ = - 1: reciprocal (inverse) transformation ( 1/x )
-				<br/>
-				λ = - 2: reciprocal square transformation ( 1/x^2 )
-				<br/>
-				<br/>
-			`
-		},
-	}
-}
+
 
 class nonNormalBoxCoxTransform extends baseModal {
+    static dialogId = 'nonNormalBoxCoxTransform'
+    static t = baseModal.makeT(nonNormalBoxCoxTransform.dialogId)
+
     constructor() {
         var config = {
-            id: "nonNormalBoxCoxTransform",
-            label: localization.en.title,
+            id: nonNormalBoxCoxTransform.dialogId,
+            label: nonNormalBoxCoxTransform.t('title'),
             modalType: "two",
             RCode:`
 
@@ -240,7 +179,7 @@ BoxCoxTransform <- function(response, lambda=0)
             content_var: { el: new srcVariableList(config, {action: "move", scroll:true}) }, 
 			boxcoxChk: {
                 el: new checkbox(config, {
-                    label: localization.en.boxcoxChk, 
+                    label: nonNormalBoxCoxTransform.t('boxcoxChk'), 
 					no: "boxcoxChk",
                     bs_type: "valuebox",
                     //style: "mt-2 mb-1",
@@ -253,7 +192,7 @@ BoxCoxTransform <- function(response, lambda=0)
             },
 			johnsonChk: {
                 el: new checkbox(config, {
-                    label: localization.en.johnsonChk, 
+                    label: nonNormalBoxCoxTransform.t('johnsonChk'), 
 					no: "johnsonChk",
                     bs_type: "valuebox",
                     style: "mb-2",
@@ -266,7 +205,7 @@ BoxCoxTransform <- function(response, lambda=0)
 			digits: {
                 el: new inputSpinner(config, {
                     no: 'digits',
-                    label: localization.en.digits,
+                    label: nonNormalBoxCoxTransform.t('digits'),
                     required: true,
                     min: 0,
                     max: 15,
@@ -279,7 +218,7 @@ BoxCoxTransform <- function(response, lambda=0)
 			lambda: {
                 el: new input(config, {
                     no: 'lambda',
-                    label: localization.en.lambda,
+                    label: nonNormalBoxCoxTransform.t('lambda'),
                     placeholder: "",
                     required: false,
                     type: "numeric",
@@ -294,14 +233,14 @@ BoxCoxTransform <- function(response, lambda=0)
             },
 			label2: { 
 				el: new labelVar(config, { 
-					label: localization.en.label2, 
+					label: nonNormalBoxCoxTransform.t('label2'), 
 					h: 6, 
 					style: "mb-2",
 				}) 
 			},
 			variableSelcted: {
                 el: new dstVariable(config, {
-                    label: localization.en.variableSelcted,
+                    label: nonNormalBoxCoxTransform.t('variableSelcted'),
                     no: "variableSelcted",
                     required: false,
                     //filter: "String|Numeric|Logical|Ordinal|Nominal|Scale",
@@ -312,7 +251,7 @@ BoxCoxTransform <- function(response, lambda=0)
             },
 			selectVariableRad: {
                 el: new radioButton(config, {
-                    label: localization.en.selectVariableRad,
+                    label: nonNormalBoxCoxTransform.t('selectVariableRad'),
                     no: "gpbox1",
                     increment: "selectVariableRad",
                     value: "variable",
@@ -322,7 +261,7 @@ BoxCoxTransform <- function(response, lambda=0)
             },
 			selectDatasetRad: {
                 el: new radioButton(config, {
-                    label: localization.en.selectDatasetRad,
+                    label: nonNormalBoxCoxTransform.t('selectDatasetRad'),
                     no: "gpbox1",
                     increment: "selectDatasetRad",
                     value: "dataset",
@@ -335,7 +274,7 @@ BoxCoxTransform <- function(response, lambda=0)
 			boxcoxColName: {
                 el: new input(config, {
                     no: 'boxcoxColName',
-                    label: localization.en.boxcoxColName,
+                    label: nonNormalBoxCoxTransform.t('boxcoxColName'),
                     placeholder: "",
                     required: false,
                     type: "character",
@@ -349,7 +288,7 @@ BoxCoxTransform <- function(response, lambda=0)
 			boxcoxDatasetName: {
                 el: new input(config, {
                     no: 'boxcoxDatasetName',
-                    label: localization.en.boxcoxDatasetName,
+                    label: nonNormalBoxCoxTransform.t('boxcoxDatasetName'),
                     placeholder: "",
                     required: false,
                     type: "character",
@@ -363,7 +302,7 @@ BoxCoxTransform <- function(response, lambda=0)
 			johnsonDatasetName: {
                 el: new input(config, {
                     no: 'johnsonDatasetName',
-                    label: localization.en.johnsonDatasetName,
+                    label: nonNormalBoxCoxTransform.t('johnsonDatasetName'),
                     placeholder: "",
                     required: false,
                     type: "character",
@@ -398,13 +337,22 @@ BoxCoxTransform <- function(response, lambda=0)
 					objects.digits.el.content
 					],
             nav: {
-                name: localization.en.navigation,
+                name: nonNormalBoxCoxTransform.t('navigation'),
                 icon: "icon-gaussian-function",
                 modal: config.id
             }
         };
         super(config, objects, content);
-        this.help = localization.en.help;
+        
+        this.help = {
+            title: nonNormalBoxCoxTransform.t('help.title'),
+            r_help: "help(data,package='utils')",
+            body: nonNormalBoxCoxTransform.t('help.body')
+        }
+;
     }
 }
-module.exports.item = new nonNormalBoxCoxTransform().render()
+
+module.exports = {
+    render: () => new nonNormalBoxCoxTransform().render()
+}

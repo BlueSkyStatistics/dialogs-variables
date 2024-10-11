@@ -1,45 +1,5 @@
 
-var localization = {
-    en: {
-        title: "Conditional Compute, multiple",
-        navigation: "Conditional Compute, multiple",
-        newvar: "New/Existing Variable name (no spaces/special characters):",
-        label2: "Expression Builder: Construct the desired expression, for e.g. var1+var2, as.numeric(var2), substr(var4,2,4)...",
-        formula: "Construct a compute command",
-        help: {
-            title: "Conditional Compute, multiple",
-            r_help: "help(log, package ='base')",
-            body: `
-<b>Description</b></br>
-Computes an expression and stores the result in a variable/column of a dataframe/dataset</br>
-<br/>
-<b>Usage</b>
-<br/>
-<code> 
-DatasetX <- DatasetX %>% mutate ( var1 = Expression)​<br/>
-DatasetX <- DatasetX %>% mutate ( var1 = var2 + var3)​
-</code> <br/>
-<b>Arguments</b><br/>
-<ul>
-<li>
-DatasetX:  dataframe/dataset name.​
-</li>
-<li>
-var1: The new/existing column in the dataset/dataframe that needs to be computed
-</li>
-<li>
-Expression: An expression in the form variable1 =variable2+variable3
-</li>
-</ul>
-<b>Details</b></br>
-Evaluates the expression and stores the result in variable/column of a dataframe/dataset</br>
-<b>Package</b></br>
-dplyr</br>
-<b>Help</b></br>
-For detailed help click on the R icon on the top right hand side of this dialog overlay or run the following command help(mutate, package ='dplyr') in the R editor window
-            `}
-    }
-}
+
 
 
 
@@ -47,10 +7,13 @@ For detailed help click on the R icon on the top right hand side of this dialog 
 
 
 class conditionalComputeMayo extends baseModal {
+    static dialogId = 'conditionalComputeMayo'
+    static t = baseModal.makeT(conditionalComputeMayo.dialogId)
+
     constructor() {
         var config = {
-            id: "conditionalComputeMayo",
-            label: localization.en.title,
+            id: conditionalComputeMayo.dialogId,
+            label: conditionalComputeMayo.t('title'),
             modalType: "two",
             splitProcessing:false,
             RCode: `
@@ -67,7 +30,7 @@ BSkyLoadRefresh("{{dataset.name}}")
             newvar: {
                 el: new input(config, {
                     no: 'newvar',
-                    label: localization.en.newvar,
+                    label: conditionalComputeMayo.t('newvar'),
                     placeholder: "",
                     extraction: "TextAsIs",
                     value: "",
@@ -90,13 +53,19 @@ BSkyLoadRefresh("{{dataset.name}}")
             left: [objects.content_var.el.content],
             right: [objects.newvar.el.content, objects.swCase.el.content ],
             nav: {
-                name: localization.en.navigation,
+                name: conditionalComputeMayo.t('navigation'),
                 icon: "icon-sqrt_qmark",
                 modal: config.id
             }
         }
         super(config, objects, content);
-        this.help = localization.en.help;
+        
+        this.help = {
+            title: conditionalComputeMayo.t('help.title'),
+            r_help: "help(data,package='utils')",
+            body: conditionalComputeMayo.t('help.body')
+        }
+;
     }
 
     prepareExecution(instance) {

@@ -1,54 +1,5 @@
 
-var localization = {
-    en: {
-        title: "Specify a label for NAs",
-        navigation: "Label NAs",
-        target: "Factor variables to label NA values ",
-        label1: "Enter a label for the \"NA\" level for factor variable(s). New label can be saved to existing variable(s) or new variables by specifying a prefix/suffix. New variables will be created with the prefix/suffix appended to existing names. ",
-        newLevels: "Enter a label for the \"NA\" level",
-        label2: "Create new or overwrite existing variables",
-        rd3: "Specify a suffix (A new variable will be created with the suffix) ",
-        txt3: "Enter a suffix",
-        rd2: "Specify a prefix (A new variable will be created with the prefix) ",
-        txt4: "Enter a prefix",
-        rd1: "Overwrite  existing variables",
-        help: {
-            title: "Remove NAs",
-            r_help: "help(fct_explicit_na, package =forcats)",
-            body: `
-<b>Description</b></br>
-Enter a label for the "NA" level for factor variable(s). New label can be saved to existing variable(s) (we overwrite existing variables) or new label for NA can be saved to new variables by specifying a prefix/suffix. New variables will be created with the prefix/suffix appended to existing names. 
-This gives missing value an explicit factor level, ensuring that they appear in summaries and on plots.
-<br/>
-<b>Usage</b>
-<br/>
-<code> 
-fct_explicit_na(f, na_level = "(Missing)")
-</code> <br/>
-<b>Arguments</b><br/>
-<ul>
-<li>
-f :A factor (or character vector).
-</li>
-<li>
-na_level :Level to use for missing values.
-</li>
-</ul>
-<b>Examples</b></br>
-<code> 
-f1 <- factor(c("a", "a", NA, NA, "a", "b", NA, "c", "a", "c", "b"))<br/>
-table(f1)<br/>
-f2 <- fct_explicit_na(f1)<br/>
-table(f2)<br/>
-</code> <br/>
-<b>Package</b></br>
-forcats</br>
-<b>Help</b></br>
-Type the line below in the BlueSky Statistics  R syntax editor</br>
-help(fct_explicit_na, package =forcats)
-`}
-    }
-}
+
 
 
 
@@ -58,10 +9,13 @@ help(fct_explicit_na, package =forcats)
 
 
 class labelNAasMissing extends baseModal {
+    static dialogId = 'labelNAasMissing'
+    static t = baseModal.makeT(labelNAasMissing.dialogId)
+
     constructor() {
         var config = {
-            id: "labelNAasMissing",
-            label: localization.en.title,
+            id: labelNAasMissing.dialogId,
+            label: labelNAasMissing.t('title'),
             modalType: "two",
             splitProcessing:false,
             RCode: `
@@ -77,11 +31,11 @@ require(forcats);
 `
         }
         var objects = {
-            label1: { el: new labelVar(config, { label: localization.en.label1, h: 6 }) },
+            label1: { el: new labelVar(config, { label: labelNAasMissing.t('label1'), h: 6 }) },
             content_var: { el: new srcVariableList(config, {action: "move"}) },
             target: {
                 el: new dstVariableList(config, {
-                    label: localization.en.target,
+                    label: labelNAasMissing.t('target'),
                     no: "target",
                     filter: "Numeric|Ordinal|Nominal",
                     extraction: "NoPrefix|UseComma",
@@ -91,7 +45,7 @@ require(forcats);
             newLevels: {
                 el: new input(config, {
                     no: 'newLevels',
-                    label: localization.en.newLevels,
+                    label: labelNAasMissing.t('newLevels'),
                     placeholder: "",
                     extraction: "TextAsIs",
                     value: "",
@@ -101,12 +55,12 @@ require(forcats);
                     type: "character",
                 }),
             },
-            label2: { el: new labelVar(config, { label: localization.en.label2, h: 5, style: "mt-3" }) },
-            rd3: { el: new radioButton(config, { label: localization.en.rd3, no: "grp10", required: true, dependant_objects: ["txt3"], increment: "rd3", value: "Suffix", state: "checked", extraction: "ValueAsIs", }) },
+            label2: { el: new labelVar(config, { label: labelNAasMissing.t('label2'), h: 5, style: "mt-3" }) },
+            rd3: { el: new radioButton(config, { label: labelNAasMissing.t('rd3'), no: "grp10", required: true, dependant_objects: ["txt3"], increment: "rd3", value: "Suffix", state: "checked", extraction: "ValueAsIs", }) },
             txt3: {
                 el: new input(config, {
                     no: 'txt3',
-                    label: localization.en.txt3,
+                    label: labelNAasMissing.t('txt3'),
                     placeholder: "",
                     extraction: "TextAsIs",
                     value: "",
@@ -114,11 +68,11 @@ require(forcats);
                     type: "character"
                 }),
             },
-            rd2: { el: new radioButton(config, { label: localization.en.rd2, no: "grp10", required: true, dependant_objects: ["txt4"], increment: "rd2", value: "Prefix", state: "", extraction: "ValueAsIs", }) },
+            rd2: { el: new radioButton(config, { label: labelNAasMissing.t('rd2'), no: "grp10", required: true, dependant_objects: ["txt4"], increment: "rd2", value: "Prefix", state: "", extraction: "ValueAsIs", }) },
             txt4: {
                 el: new input(config, {
                     no: 'txt4',
-                    label: localization.en.txt4,
+                    label: labelNAasMissing.t('txt4'),
                     placeholder: "",
                     extraction: "TextAsIs",
                     value: "",
@@ -126,20 +80,26 @@ require(forcats);
                     type: "character"
                 }),
             },
-            rd1: { el: new radioButton(config, { label: localization.en.rd1, no: "grp10", increment: "rd1", value: "Overwrite", state: "", extraction: "ValueAsIs" }) },
+            rd1: { el: new radioButton(config, { label: labelNAasMissing.t('rd1'), no: "grp10", increment: "rd1", value: "Overwrite", state: "", extraction: "ValueAsIs" }) },
         }
         const content = {
             head: [objects.label1.el.content],
             left: [objects.content_var.el.content],
             right: [objects.target.el.content, objects.newLevels.el.content, objects.label2.el.content, objects.rd3.el.content, objects.txt3.el.content, objects.rd2.el.content, objects.txt4.el.content, objects.rd1.el.content],
             nav: {
-                name: localization.en.navigation,
+                name: labelNAasMissing.t('navigation'),
                 icon: "icon-na",
                 modal: config.id
             }
         }
         super(config, objects, content);
-        this.help = localization.en.help;
+        
+        this.help = {
+            title: labelNAasMissing.t('help.title'),
+            r_help: "help(data,package='utils')",
+            body: labelNAasMissing.t('help.body')
+        }
+;
     }
     prepareExecution(instance) {
         var res = [];
@@ -165,4 +125,7 @@ require(forcats);
         return res;
     }
 }
-module.exports.item = new labelNAasMissing().render()
+
+module.exports = {
+    render: () => new labelNAasMissing().render()
+}
