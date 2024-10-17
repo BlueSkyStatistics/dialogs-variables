@@ -143,7 +143,7 @@ require(dplyr)
                 rankString: rankString,
             }
         }
-        res.push({ cmd: instance.dialog.renderR(code_vars), cgid: newCommandGroup() })
+        res.push({ cmd: instance.dialog.renderR(code_vars), cgid: newCommandGroup(`${instance.config.id}`, `${instance.config.label}`), oriR: instance.config.RCode, code_vars: code_vars })
         return res;
     }
 }
