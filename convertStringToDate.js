@@ -93,16 +93,17 @@ BSkyConvertCharDateVarToDate <- function(charDateVar, dateFormat, timeFormat,
 		#ymd_hms("2024-10-07 12:34:56.789")
 		switch(timeFormat,
 			"Hour Min Sec" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, charDateVar),tz = "UTC"))}, 
-			"Hour Min Sec Millisec" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, charDateVar),tz = "UTC"))},
-			"Min Sec Millisec" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", charDateVar),tz = "UTC"))},								
+			"Hour Min Sec Millisec (or Microsec)" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, charDateVar),tz = "UTC"))},
+			"Min Sec Millisec (or Microsec)" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", charDateVar),tz = "UTC"))},								
 			"Hour Min" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, charDateVar, ":00"),tz = "UTC"))}, 
 			"Min Sec" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", charDateVar),tz = "UTC"))}, 
-			"Sec Millisec" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", missingMinute, ":", charDateVar),tz = "UTC"))},  
+			"Sec Millisec (or Microsec)" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", missingMinute, ":", charDateVar),tz = "UTC"))},  
 			"Hour only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, charDateVar, ":00:00"),tz = "UTC"))}, 
 			"Min only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", charDateVar, ":00"),tz = "UTC"))}, 
 			"Sec only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", missingMinute, ":", charDateVar),tz = "UTC"))},
-			"Millisec only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", missingMinute, ":",  paste0(missingSeconds, "." ,charDateVar)),tz = "UTC"))},
-		
+			"Millisec only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", missingMinute, ":",  paste0(missingSeconds, "." ,sprintf("%03d", as.numeric(charDateVar)))),tz = "UTC"))},
+			"Micosec only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", missingMinute, ":",  paste0(missingSeconds, "." ,sprintf("%06d", as.numeric(charDateVar)))),tz = "UTC"))},
+			
 			stop("Invalid time format type")
 		)
 	} else {
@@ -125,16 +126,17 @@ BSkyConvertCharDateVarToDate <- function(charDateVar, dateFormat, timeFormat,
 }
 
 {{if(options.selected.rdgrp1 ==="suffix")}} 
-	if(grepl("Millisec", "{{selected.TimeFormat | safe}}")){
+	if(grepl("(Millisec|Microsec)", "{{selected.TimeFormat | safe}}")){
 		{{dataset.name}}\${{selected.Destination | safe}}{{selected.prefixOrSuffix | safe}}_fs = BSkyConvertCharDateVarToDate(as.character({{dataset.name}}\${{selected.Destination | safe}}), "{{selected.DateFormat | safe}}", "{{selected.TimeFormat | safe}}", bsky_missingYear, bsky_missingMonth, bsky_missingDay, bsky_missingHour, bsky_missingMinute, bsky_missingSeconds)
-		{{dataset.name}}\${{selected.Destination | safe}}{{selected.prefixOrSuffix | safe}}_char = strftime({{dataset.name}}\${{selected.Destination | safe}}{{selected.prefixOrSuffix | safe}}_fs, "%Y-%m-%d %H:%M:%OS3")
+		#{{dataset.name}}\${{selected.Destination | safe}}{{selected.prefixOrSuffix | safe}}_char = strftime({{dataset.name}}\${{selected.Destination | safe}}{{selected.prefixOrSuffix | safe}}_fs, "%Y-%m-%d %H:%M:%OS3")
+		{{dataset.name}}\${{selected.Destination | safe}}{{selected.prefixOrSuffix | safe}}_char = format({{dataset.name}}\${{selected.Destination | safe}}{{selected.prefixOrSuffix | safe}}_fs, "%Y-%m-%d %H:%M:%OS6", tz="UTC")
 	}else {
 		{{dataset.name}}\${{selected.Destination | safe}}{{selected.prefixOrSuffix | safe}} = BSkyConvertCharDateVarToDate(as.character({{dataset.name}}\${{selected.Destination | safe}}), "{{selected.DateFormat | safe}}", "{{selected.TimeFormat | safe}}", bsky_missingYear, bsky_missingMonth, bsky_missingDay, bsky_missingHour, bsky_missingMinute, bsky_missingSeconds)
 	}
 {{#else}}
-	if(grepl("Millisec", "{{selected.TimeFormat | safe}}")){
+	if(grepl("(Millisec|Microsec)", "{{selected.TimeFormat | safe}}")){
 		{{dataset.name}}\${{selected.prefixOrSuffix | safe}}{{selected.Destination | safe}}_fs = BSkyConvertCharDateVarToDate(as.character({{dataset.name}}\${{selected.Destination | safe}}), "{{selected.DateFormat | safe}}", "{{selected.TimeFormat | safe}}", bsky_missingYear, bsky_missingMonth, bsky_missingDay, bsky_missingHour, bsky_missingMinute, bsky_missingSeconds)
-		{{dataset.name}}\${{selected.prefixOrSuffix | safe}}{{selected.Destination | safe}}_char = strftime({{dataset.name}}\${{selected.prefixOrSuffix | safe}}{{selected.Destination | safe}}_fs, "%Y-%m-%d %H:%M:%OS3")
+		{{dataset.name}}\${{selected.prefixOrSuffix | safe}}{{selected.Destination | safe}}_char = format({{dataset.name}}\${{selected.prefixOrSuffix | safe}}{{selected.Destination | safe}}_fs, "%Y-%m-%d %H:%M:%OS6", tz="UTC")
 	}else {
 		{{dataset.name}}\${{selected.prefixOrSuffix | safe}}{{selected.Destination | safe}} = BSkyConvertCharDateVarToDate(as.character({{dataset.name}}\${{selected.Destination | safe}}), "{{selected.DateFormat | safe}}", "{{selected.TimeFormat | safe}}", bsky_missingYear, bsky_missingMonth, bsky_missingDay, bsky_missingHour, bsky_missingMinute, bsky_missingSeconds)
 	}
@@ -208,15 +210,16 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)
                     required: false,
                     options:[	"",
 								"Hour Min Sec", 
-								"Hour Min Sec Millisec",
-								"Min Sec Millisec",								
+								"Hour Min Sec Millisec (or Microsec)",
+								"Min Sec Millisec (or Microsec)",								
 								"Hour Min", 
 								"Min Sec", 
-								"Sec Millisec",  
+								"Sec Millisec (or Microsec)",  
 								"Hour only", 
 								"Min only", 
 								"Sec only",
-								"Millisec only"
+								"Millisec only",
+								"Microsec only",
 							],
 				})
             },
