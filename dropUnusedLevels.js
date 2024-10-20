@@ -103,8 +103,9 @@ require(forcats);
     prepareExecution(instance) {
         var res = [];
         var temp = "";
+        var code_vars = "";
         instance.objects.target.el.getVal().forEach(function (value) {
-            var code_vars = {
+            code_vars = {
                 dataset: {
                     name: getActiveDataset()
                 },
@@ -120,7 +121,7 @@ require(forcats);
             cmd = removenewline(cmd);
             temp = temp + cmd + "\n";
         })
-        res.push({ cmd: temp, cgid: newCommandGroup() })
+        res.push({ cmd: temp, cgid: newCommandGroup(`${instance.config.id}`, `${instance.config.label}`), oriR: instance.config.RCode, code_vars: code_vars })
         return res;
     }
 }

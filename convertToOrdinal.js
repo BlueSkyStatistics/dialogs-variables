@@ -70,7 +70,7 @@ class ConvertToOrdinal extends baseModal {
 		temp = temp + "\n#Refreshing the dataset"
 		temp = temp + "\nBSkyLoadRefresh(\"" + code_vars.dataset.name + "\")"
 		let cmd = temp
-		res.push({ cmd: cmd, cgid: newCommandGroup() })
+		res.push({ cmd: cmd, cgid: newCommandGroup(`${instance.config.id}`, `${instance.config.label}`), oriR: instance.config.RCode, code_vars: code_vars })
 		return res
 
     }
