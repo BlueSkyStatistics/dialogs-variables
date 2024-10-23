@@ -102,7 +102,7 @@ BSkyConvertCharDateVarToDate <- function(charDateVar, dateFormat, timeFormat,
 			"Min only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", charDateVar, ":00"),tz = "UTC"))}, 
 			"Sec only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", missingMinute, ":", charDateVar),tz = "UTC"))},
 			"Millisec only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", missingMinute, ":",  paste0(missingSeconds, "." ,sprintf("%03d", as.numeric(charDateVar)))),tz = "UTC"))},
-			"Micosec only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", missingMinute, ":",  paste0(missingSeconds, "." ,sprintf("%06d", as.numeric(charDateVar)))),tz = "UTC"))},
+			"Microsec only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", missingMinute, ":",  paste0(missingSeconds, "." ,sprintf("%06d", as.numeric(charDateVar)))),tz = "UTC"))},
 			
 			stop("Invalid time format type")
 		)
