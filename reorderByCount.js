@@ -141,9 +141,11 @@ require(forcats);
     }
     prepareExecution(instance) {
         var res = [];
+        let count = 0;
         var temp = "";
+        var code_vars = "";
         instance.objects.target.el.getVal().forEach(function (value) {
-            var code_vars = {
+            code_vars = {
                 dataset: {
                     name: getActiveDataset()
                 },
@@ -158,9 +160,16 @@ require(forcats);
             }
             let cmd = instance.dialog.renderR(code_vars)
             cmd = removenewline(cmd);
-            temp = temp + cmd + "\n";
+            // temp = temp + cmd + "\n";
+            if (count == 0) {
+                res.push({ cmd: cmd, cgid: newCommandGroup(`${instance.config.id}`, `${instance.config.label}`), oriR: instance.config.RCode, code_vars: code_vars })
+            }
+            else {
+                res.push({ cmd: cmd, cgid: newCommandGroup(), oriR: instance.config.RCode, code_vars: code_vars })
+            }
+            count++ 
         })
-        res.push({ cmd: temp, cgid: newCommandGroup() })
+        // res.push({ cmd: temp, cgid: newCommandGroup() })
         return res;
     }
 }

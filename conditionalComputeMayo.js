@@ -118,7 +118,7 @@ BSkyLoadRefresh("{{dataset.name}}")
             cmd = removenewline(cmd);
             temp = temp + cmd + "\n";
             
-        res.push({ cmd: temp, cgid: newCommandGroup() })
+            res.push({ cmd: temp, cgid: newCommandGroup(`${instance.config.id}`, `${instance.config.label}`), oriR: instance.config.RCode, code_vars: code_vars })
         return res;
     }
 }
