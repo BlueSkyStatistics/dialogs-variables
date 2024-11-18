@@ -7,10 +7,10 @@ const nav = {
             "name": "Box-Cox",
             "icon": "icon-gaussian-function",
             "children": [
-                "./normalityBoxCoxTransform",
-                "./normalityBoxCoxInspection",
-                "./normalityBoxCoxAddRemoveLambda",
-                "./normalityInverseBoxCox"
+                "./nonNormalBoxCoxTransform",
+                "./inspectBoxCoxLambda",
+                "./addRemoveBoxCoxLambda",
+                "./inverseBoxCoxTransform"
             ]
         },        			
         {
@@ -33,7 +33,7 @@ const nav = {
 				"./convertStringToDate",
                 "./convertStringToDateTime",
                 "./convertToFactor",
-                "./convertToOrdinal"
+                "./ConvertToOrdinal"
             ]
         },
         "./deleteVariables",
