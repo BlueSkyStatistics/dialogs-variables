@@ -145,8 +145,6 @@ class ConvertToOrdinal extends baseModal {
         res.push({ cmd: temp, cgid: newCommandGroup(), oriR: instance.config.RCode, code_vars: code_vars })
 		// res.push({ cmd: cmd, cgid: newCommandGroup(`${instance.config.id}`, `${instance.config.label}`), oriR: instance.config.RCode, code_vars: code_vars })
 		return res
-
     }
-
 }
 module.exports.item = new ConvertToOrdinal().render()
