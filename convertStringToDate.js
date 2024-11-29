@@ -107,20 +107,63 @@ BSkyConvertCharDateVarToDate <- function(charDateVar, dateFormat, timeFormat,
 			stop("Invalid time format type")
 		)
 	} else {
+		# Extract the time component at the end of the string (after the last space)
+		time_part = sub(".*\\\\s(\\\\d{1,2}:\\\\d{1,2}:\\\\d{1,2}(\\\\.\\\\d{1,3})?)$", "\\\\1", charDateVar)
+		#print(time_part)
+
+		# Extract the date component by removing the time part
+		date_part = sub("\\\\s\\\\d{1,2}:\\\\d{1,2}:\\\\d{1,2}(\\\\.\\\\d{1,3})?$", "", charDateVar)
+		#print(date_part)
+		
+		date_ready_str = switch(dateFormat,
+				 "month day" = {paste(missingYear,"/",date_part)},
+				 "day month" = {paste(missingYear,"/",date_part)},
+				 "month year" = {paste(missingDay,"/",date_part)},
+				 "year month" = {paste(date_part,"/",missingDay)},
+				 "year only" = {paste(date_part, "/", missingMonth, "/", missingDay)},
+				 "month only" =  {paste(missingYear,"/",date_part, "/", missingDay)},
+				 "day only" = {paste(missingYear, "/", missingMonth, "/", BSkyWeekdayToNumber(date_part))},
+				 "year month day" = {date_part},
+				 "month day year" = {date_part},
+				 "day month year" = {date_part},
+	
+				 stop("Invalid date format type")
+		)
+		#print(date_ready_str)
+		
+		time_ready_str = switch(timeFormat,
+			"Hour Min Sec" = {time_part}, 
+			"Hour Min Sec Millisec (or Microsec)" = {time_part},
+			"Min Sec Millisec (or Microsec)" = {paste(missingHour, ":", time_part)},								
+			"Hour Min" = {paste( time_part, ":00")}, 
+			"Min Sec" = {paste(missingHour, ":", time_part)}, 
+			"Sec Millisec (or Microsec)" = {paste(missingHour, ":", missingMinute, ":", time_part)},  
+			"Hour only" = {paste(time_part, ":00:00")}, 
+			"Min only" = {paste(missingHour, ":", time_part, ":00")}, 
+			"Sec only" = {paste(missingHour, ":", missingMinute, ":", time_part)},
+			"Millisec only" = {paste(missingHour, ":", missingMinute, ":",  paste0(missingSeconds, "." ,sprintf("%03d", as.numeric(time_part))))},
+			"Microsec only" = {paste(missingHour, ":", missingMinute, ":",  paste0(missingSeconds, "." ,sprintf("%06d", as.numeric(time_part))))},
+			
+			stop("Invalid time format type")
+		)
+		#print(time_ready_str)
+		
 		bsky_date_time = switch(dateFormat,
-				 "month day" = {ymd_hms(paste(charDateVar),tz = "UTC")},
-				 "day month" = {ydm_hms(paste(charDateVar),tz = "UTC")},
-				 "month year" = {dmy_hms(paste(charDateVar),tz = "UTC")},
-				 "year month" = {ymd_hms(paste(charDateVar),tz = "UTC")},
-				 "year only" = {ymd_hms(paste(charDateVar),tz = "UTC")},
-				 "month only" =  {ymd_hms(paste(missingYear),tz = "UTC")},
-				 "day only" = {ymd_hms(paste(charDateVar),tz = "UTC")},
-				 "year month day" = {ymd_hms(charDateVar,tz = "UTC")},
-				 "month day year" = {mdy_hms(charDateVar,tz = "UTC")},
-				 "day month year" = {dmy_hms(charDateVar,tz = "UTC")},
+				 "month day" = {ymd_hms(paste(date_ready_str, time_ready_str),tz = "UTC")},
+				 "day month" = {ydm_hms(paste(date_ready_str, time_ready_str),tz = "UTC")},
+				 "month year" = {dmy_hms(paste(date_ready_str, time_ready_str),tz = "UTC")},
+				 "year month" = {ymd_hms(paste(date_ready_str, time_ready_str),tz = "UTC")},
+				 "year only" = {ymd_hms(paste(date_ready_str, time_ready_str),tz = "UTC")},
+				 "month only" =  {ymd_hms(paste(date_ready_str, time_ready_str),tz = "UTC")},
+				 "day only" = {ymd_hms(paste(date_ready_str, time_ready_str),tz = "UTC")},
+				 "year month day" = {ymd_hms(paste(date_ready_str, time_ready_str),tz = "UTC")},
+				 "month day year" = {mdy_hms(paste(date_ready_str, time_ready_str),tz = "UTC")},
+				 "day month year" = {dmy_hms(paste(date_ready_str, time_ready_str),tz = "UTC")},
 				 
 				 stop("Invalid date time format type")
 		)
+		#print(bsky_date_time)
+		
 		return(bsky_date_time)
 	}
 }
