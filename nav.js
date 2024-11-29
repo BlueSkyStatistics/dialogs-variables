@@ -1,20 +1,21 @@
-const nav = {
-    "name": "Variables",
+let t = getT('menutoolbar')
+const nav = () => ({
+    "name": t('variables_top_level_title'),// {ns: 'menutoolbar'}),
     "tab": "Variables",
     "buttons": [
         "./binNumericVariables",
         {
-            "name": "Box-Cox",
+            "name": t('variables_Box_Cox'),// {ns: 'menutoolbar'}),
             "icon": "icon-gaussian-function",
             "children": [
-                "./normalityBoxCoxTransform",
-                "./normalityBoxCoxInspection",
-                "./normalityBoxCoxAddRemoveLambda",
-                "./normalityInverseBoxCox"
+                "./nonNormalBoxCoxTransform",
+                "./inspectBoxCoxLambda",
+                "./addRemoveBoxCoxLambda",
+                "./inverseBoxCoxTransform"
             ]
         },        			
         {
-            "name": "Compute",
+            "name": t('variables_Compute'),// {ns: 'menutoolbar'}),
             "icon": "icon-calculator",
             "children": [
                 "./applyFunctionAcrossRows",
@@ -26,19 +27,19 @@ const nav = {
         },
         "./concatenateVariables",
         {
-            "name": "Convert",
+            "name": t('variables_Convert'),// {ns: 'menutoolbar'}),
             "icon": "icon-exchange",
             "children": [
                 "./convertDateToString",
 				"./convertStringToDate",
                 "./convertStringToDateTime",
                 "./convertToFactor",
-                "./convertToOrdinal"
+                "./ConvertToOrdinal"
             ]
         },
         "./deleteVariables",
         {
-            "name": "Factor Levels",
+            "name": t('variables_Factor_Levels'),// {ns: 'menutoolbar'}),
             "icon": "icon-shapes",
             "children": [
                 "./addNewLevels",
@@ -53,7 +54,7 @@ const nav = {
             ]
         },
         {
-            "name": "Missing Values",
+            "name": t('variables_Missing_Values'),// {ns: 'menutoolbar'}),
             "icon": "icon-na",
             "children": [
                 "./replaceMissingValues",
@@ -68,7 +69,10 @@ const nav = {
         "./standardizeVariables",
         "./transformVariables"
     ]
-}
+})
 
-module.exports.nav = nav
+module.exports = {
+    nav: nav(),
+    render: () => nav()
+}
 
