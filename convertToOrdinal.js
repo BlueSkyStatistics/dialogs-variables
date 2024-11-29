@@ -54,6 +54,11 @@ class ConvertToOrdinal extends baseModal {
 	 prepareExecution(instance) {
         var res = [];
         let count = 0
+					  
+										
+			  
+												   
+		 
        let temp =""
        let code_vars = ""
 		instance.objects.trg.el.getVal().forEach(function(value) {
@@ -82,8 +87,10 @@ class ConvertToOrdinal extends baseModal {
         res.push({ cmd: temp, cgid: newCommandGroup(), oriR: instance.config.RCode, code_vars: code_vars })
 		// res.push({ cmd: cmd, cgid: newCommandGroup(`${instance.config.id}`, `${instance.config.label}`), oriR: instance.config.RCode, code_vars: code_vars })
 		return res
-
     }
-
 }
-module.exports.item = new ConvertToOrdinal().render()
+
+module.exports = {
+    render: () => new ConvertToOrdinal().render()
+}
+

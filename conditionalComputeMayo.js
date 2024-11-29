@@ -91,7 +91,11 @@ BSkyLoadRefresh("{{dataset.name}}")
         return res;
     }
 }
-module.exports.item = new conditionalComputeMayo().render()
+
+module.exports = {
+    render: () => new conditionalComputeMayo().render()
+}
+
 
 
 function constructIfElse(swCase) {
