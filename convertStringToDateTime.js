@@ -82,7 +82,7 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)
         var timeZoneOptions = {
             el: new optionsVar(config, {
                 no: "timeZoneOptions",
-                name: "Advanced",
+                name: convertStringToDateTime.t('advanced_lbl'),
                 content: [
                     objects.TimeZone.el,
                 ]
