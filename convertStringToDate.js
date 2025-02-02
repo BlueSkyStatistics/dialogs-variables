@@ -516,7 +516,7 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)
         var timeZoneOptions = {
             el: new optionsVar(config, {
                 no: "timeZoneOptions",
-                name: "Options",
+                //name: "Options",
                 content: [
                     //objects.TimeZone.el, 
 					objects.missingYear.el,
