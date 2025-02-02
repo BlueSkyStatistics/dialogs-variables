@@ -70,7 +70,7 @@ BSkyLoadRefresh("{{dataset.name}}")
         
         this.help = {
             title: standardizeVariables.t('help.title'),
-            r_help: "help(data,package='utils')",
+            r_help: standardizeVariables.t('help.r_help'),  //r_help: "help(data,package='utils')",
             body: standardizeVariables.t('help.body')
         }
 ;

@@ -103,7 +103,7 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)
         
         this.help = {
             title: convertDateToString.t('help.title'),
-            r_help: "help(data,package='utils')",
+            r_help: convertDateToString.t('help.r_help'),  //r_help: "help(data,package='utils')",
             body: convertDateToString.t('help.body')
         }
 ;

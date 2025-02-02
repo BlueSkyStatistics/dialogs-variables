@@ -45,7 +45,7 @@ class ConvertToOrdinal extends baseModal {
         
         this.help = {
             title: ConvertToOrdinal.t('help.title'),
-            r_help: "help(data,package='utils')",
+            r_help: ConvertToOrdinal.t('help.r_help'),  //r_help: "help(data,package='utils')",
             body: ConvertToOrdinal.t('help.body')
         }
 ;

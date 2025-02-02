@@ -62,7 +62,7 @@ BSkyLoadRefresh("{{dataset.name}}")
         
         this.help = {
             title: replaceMissingValues.t('help.title'),
-            r_help: "help(data,package='utils')",
+            r_help: replaceMissingValues.t('help.r_help'),  //r_help: "help(data,package='utils')",
             body: replaceMissingValues.t('help.body')
         }
 ;

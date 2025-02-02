@@ -104,7 +104,7 @@ require(MASS)
         
         this.help = {
             title: inspectBoxCoxLambda.t('help.title'),
-            r_help: "help(data,package='utils')",
+            r_help: inspectBoxCoxLambda.t('help.r_help'),  //r_help: "help(data,package='utils')",
             body: inspectBoxCoxLambda.t('help.body')
         }
 ;

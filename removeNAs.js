@@ -68,7 +68,7 @@ BSkyLoadRefresh("{{selected.newdatasetname | safe}}{{selected.rd | safe}}")
         
         this.help = {
             title: removeNAs.t('help.title'),
-            r_help: "help(data,package='utils')",
+            r_help: removeNAs.t('help.r_help'),  //r_help: "help(data,package='utils')",
             body: removeNAs.t('help.body')
         }
 ;

@@ -113,7 +113,7 @@ BSkyLoadRefresh("{{dataset.name}}")
         
         this.help = {
             title: recodeVariables.t('help.title'),
-            r_help: "help(data,package='utils')",
+            r_help: recodeVariables.t('help.r_help'),  //r_help: "help(data,package='utils')",
             body: recodeVariables.t('help.body')
         }
 ;

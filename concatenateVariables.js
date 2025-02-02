@@ -72,7 +72,7 @@ BSkyLoadRefresh("{{dataset.name}}")
         
         this.help = {
             title: concatenateVariables.t('help.title'),
-            r_help: "help(data,package='utils')",
+            r_help: concatenateVariables.t('help.r_help'),  //r_help: "help(data,package='utils')",
             body: concatenateVariables.t('help.body')
         }
 ;

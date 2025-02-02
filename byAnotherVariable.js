@@ -106,7 +106,7 @@ require(forcats);
         
         this.help = {
             title: byAnotherVariable.t('help.title'),
-            r_help: "help(data,package='utils')",
+            r_help: byAnotherVariable.t('help.r_help'),  //r_help: "help(data,package='utils')",
             body: byAnotherVariable.t('help.body')
         }
 ;

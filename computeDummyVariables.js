@@ -82,7 +82,7 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}" ,load.dataframe=TRUE)
         
         this.help = {
             title: computeDummyVariables.t('help.title'),
-            r_help: "help(data,package='utils')",
+            r_help: computeDummyVariables.t('help.r_help'),  //r_help: "help(data,package='utils')",
             body: computeDummyVariables.t('help.body')
         }
 ;

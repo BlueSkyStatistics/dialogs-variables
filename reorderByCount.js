@@ -103,7 +103,7 @@ require(forcats);
         
         this.help = {
             title: reorderByCount.t('help.title'),
-            r_help: "help(data,package='utils')",
+            r_help: reorderByCount.t('help.r_help'),  //r_help: "help(data,package='utils')",
             body: reorderByCount.t('help.body')
         }
 ;
@@ -136,9 +136,9 @@ require(forcats);
             else {
                 res.push({ cmd: cmd, cgid: newCommandGroup(), oriR: instance.config.RCode, code_vars: code_vars })
             }
-            count++  
+            count++ 
         })
-        // res.push({ cmd: temp, cgid: newCommandGroup(`${instance.config.id}`, `${instance.config.label}`), oriR: instance.config.RCode, code_vars: code_vars })
+        // res.push({ cmd: temp, cgid: newCommandGroup() })
         return res;
     }
 }

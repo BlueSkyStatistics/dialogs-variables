@@ -77,7 +77,7 @@ BSkyLoadRefresh("{{dataset.name}}")
         
         this.help = {
             title: applyFunctionAcrossRows.t('help.title'),
-            r_help: "help(data,package='utils')",
+            r_help: applyFunctionAcrossRows.t('help.r_help'),  //r_help: "help(data,package='utils')",
             body: applyFunctionAcrossRows.t('help.body')
         }
 ;

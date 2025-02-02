@@ -98,7 +98,7 @@ require(dplyr)
         
         this.help = {
             title: rankVariables.t('help.title'),
-            r_help: "help(data,package='utils')",
+            r_help: rankVariables.t('help.r_help'),  //r_help: "help(data,package='utils')",
             body: rankVariables.t('help.body')
         }
 ;

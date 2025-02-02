@@ -47,7 +47,7 @@ require(dplyr)
         
         this.help = {
             title: displayLevels.t('help.title'),
-            r_help: "help(data,package='utils')",
+            r_help: displayLevels.t('help.r_help'),  //r_help: "help(data,package='utils')",
             body: displayLevels.t('help.body')
         }
 ;

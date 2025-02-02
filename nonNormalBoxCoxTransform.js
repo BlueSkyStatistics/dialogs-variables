@@ -346,7 +346,7 @@ BoxCoxTransform <- function(response, lambda=0)
         
         this.help = {
             title: nonNormalBoxCoxTransform.t('help.title'),
-            r_help: "help(data,package='utils')",
+            r_help: nonNormalBoxCoxTransform.t('help.r_help'),  //r_help: "help(data,package='utils')",
             body: nonNormalBoxCoxTransform.t('help.body')
         }
 ;

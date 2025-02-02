@@ -92,7 +92,7 @@ BSkyLoadRefresh("{{dataset.name}}")
         
         this.help = {
             title: binNumericVariables.t('help.title'),
-            r_help: "help(data,package='utils')",
+            r_help: binNumericVariables.t('help.r_help'),  //r_help: "help(data,package='utils')",
             body: binNumericVariables.t('help.body')
         }
 ;

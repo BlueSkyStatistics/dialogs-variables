@@ -92,7 +92,7 @@ local({
         
         this.help = {
             title: missValsModelImputation.t('help.title'),
-            r_help: "help(data,package='utils')",
+            r_help: missValsModelImputation.t('help.r_help'),  //r_help: "help(data,package='utils')",
             body: missValsModelImputation.t('help.body')
         }
 ;

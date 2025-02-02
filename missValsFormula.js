@@ -64,7 +64,7 @@ BSkyLoadRefresh("{{dataset.name}}")
         
         this.help = {
             title: missValsFormula.t('help.title'),
-            r_help: "help(data,package='utils')",
+            r_help: missValsFormula.t('help.r_help'),  //r_help: "help(data,package='utils')",
             body: missValsFormula.t('help.body')
         }
 ;

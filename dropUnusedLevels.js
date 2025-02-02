@@ -95,7 +95,7 @@ require(forcats);
         
         this.help = {
             title: dropUnusedLevels.t('help.title'),
-            r_help: "help(data,package='utils')",
+            r_help: dropUnusedLevels.t('help.r_help'),  //r_help: "help(data,package='utils')",
             body: dropUnusedLevels.t('help.body')
         }
 ;

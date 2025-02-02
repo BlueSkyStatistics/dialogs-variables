@@ -95,7 +95,7 @@ require(forcats);
         
         this.help = {
             title: addNewLevels.t('help.title'),
-            r_help: "help(data,package='utils')",
+            r_help: addNewLevels.t('help.r_help'),  //r_help: "help(data,package='utils')",
             body: addNewLevels.t('help.body')
         }
 ;
