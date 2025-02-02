@@ -10,6 +10,7 @@ var localization = {
         Destination: "Select character variables to convert to date",
         DateFormat: "Select the format of the character string",
         TimeZone: "Select a time zone (default -nothing  selected is the local time zone of the PC)",
+		advanced_lbl: "Advanced",
         help: {
             title: "Convert Character To Date",
             r_help: "help(strptime, package=\"base\")",
@@ -130,7 +131,7 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)
         }
         var timeZoneOptions = {
             el: new optionsVar(config, {
-                no: "timeZoneOptions",
+                no: localization.en.advanced_lbl,
                 name: "Advanced",
                 content: [
                     objects.TimeZone.el,
