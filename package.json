@@ -1,6 +1,6 @@
 {
     "name": "@BlueSkyStatistics/dialogs/variables",
-    "productName": "BlueSky Statistics Variables dialogs",
+    "productName": "BioStat Prime Variables dialogs",
     "description": "Variables dialogs",
     "group": "dialogs",
     "version": "1.1.5",
@@ -21,7 +21,7 @@
     "minAppVersion": null,
     "requiredPackages": [],
     "keywords": [],
-    "author": "BlueSky Statistics",
+    "author": "BioStat Prime",
     "scripts": {},
     "dependencies": {
         "squirrelly": "7.9.2"

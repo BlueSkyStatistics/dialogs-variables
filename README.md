@@ -1,2 +1,2 @@
 # variablesDialogs
-BlueSky Statistics Variables dialogs
+BioStat Prime Variables dialogs
