@@ -75,7 +75,7 @@ class inverseBoxCoxTransform extends baseModal {
 
 require(MASS)
 
-InverseBoxCoxTransform <- function(response, lambda=0) 
+InverseBoxCoxTransform <<- function(response, lambda=0) 
 {
     if (lambda == 0L) 
 	{ 
