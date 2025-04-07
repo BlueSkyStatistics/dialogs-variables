@@ -20,7 +20,7 @@ class nonNormalBoxCoxTransform extends baseModal {
 
 require(MASS)
 
-BoxCoxTransform <- function(response, lambda=0) 
+BoxCoxTransform <<- function(response, lambda=0) 
 {
     if (lambda == 0L) 
 	{ 

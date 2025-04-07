@@ -56,7 +56,7 @@ bsky_missingSeconds = {{if(options.selected.missingSeconds !="")}} "{{selected.m
 
 
 # Create a mapping function
-BSkyWeekdayToNumber <- function(day) 
+BSkyWeekdayToNumber <<- function(day) 
 {
   if(!all(!is.na(suppressWarnings(as.numeric(day))))){
 	  day = day %>%
@@ -73,7 +73,7 @@ BSkyWeekdayToNumber <- function(day)
   return(day)
 }
 
-BSkyConvertCharDateVarToDate <- function(charDateVar, dateFormat, timeFormat, 
+BSkyConvertCharDateVarToDate <<- function(charDateVar, dateFormat, timeFormat, 
 					missingYear = lubridate::year(lubridate::now()), missingMonth = lubridate::month(lubridate::now()), missingDay = lubridate::day(lubridate::now()),
 					missingHour = lubridate::hour(lubridate::now()), missingMinute = lubridate::minute(lubridate::now()), missingSeconds = floor(lubridate::second(lubridate::now()))
 				)
