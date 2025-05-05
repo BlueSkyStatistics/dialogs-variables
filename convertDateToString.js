@@ -101,7 +101,7 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)
             nav: {
                 name: convertDateToString.t('navigation'),
                 icon: "icon-abc",
-                onclick: `r_before_modal("${config.id}")`,
+                onclick: `r_before_modal('${config.id}')`,
                 
             }
         }
