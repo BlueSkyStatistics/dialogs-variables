@@ -148,7 +148,7 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)
             nav: {
                 name: localization.en.navigation,
                 icon: "icon-abc",
-                onclick: `r_before_modal("${config.id}")`,
+                onclick: `r_before_modal('${config.id}')`,
                 
             }
         }
