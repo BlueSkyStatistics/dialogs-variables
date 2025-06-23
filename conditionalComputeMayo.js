@@ -22,8 +22,8 @@ Computes an expression and stores the result in a variable/column of a dataframe
 <b>Usage</b>
 <br/>
 <code> 
-DatasetX <- DatasetX %>% mutate ( var1 = Expression)​<br/>
-DatasetX <- DatasetX %>% mutate ( var1 = var2 + var3)​
+DatasetX <- DatasetX %>% dplyr::mutate ( var1 = Expression)​<br/>
+DatasetX <- DatasetX %>% dplyr::mutate ( var1 = var2 + var3)​
 </code> <br/>
 <b>Arguments</b><br/>
 <ul>
@@ -63,7 +63,7 @@ class conditionalComputeMayo extends baseModal {
 require(stringr);
 require(dplyr);
 #Computes the new/existing column
-local({tryCatch({ .GlobalEnv\${{dataset.name}} <- {{dataset.name}} %>% mutate({{selected.newvar |safe}} = {{selected.swCase | safe}} )}, error = function(e){  cat(conditionMessage(e))} )})
+local({tryCatch({ .GlobalEnv\${{dataset.name}} <- {{dataset.name}} %>% dplyr::mutate({{selected.newvar |safe}} = {{selected.swCase | safe}} )}, error = function(e){  cat(conditionMessage(e))} )})
 #Refresh the dataset in the data grid
 BSkyLoadRefresh("{{dataset.name}}")
 `,

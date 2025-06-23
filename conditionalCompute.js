@@ -29,8 +29,8 @@ Computes an expression and stores the result in a variable/column of a dataframe
 <b>Usage</b>
 <br/>
 <code> 
-DatasetX <- DatasetX %>% mutate ( var1 = Expression)​<br/>
-DatasetX <- DatasetX %>% mutate ( var1 = var2 + var3)​
+DatasetX <- DatasetX %>% dplyr::mutate ( var1 = Expression)​<br/>
+DatasetX <- DatasetX %>% dplyr::mutate ( var1 = var2 + var3)​
 </code> <br/>
 <b>Arguments</b><br/>
 <ul>

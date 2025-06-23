@@ -161,7 +161,7 @@ require(dplyr)
     }
     prepareExecution(instance) {
         var res = [];
-        var rankString = "%>%\n\tmutate(";
+        var rankString = "%>%\n\tdplyr::mutate(";
         var rankfn = "";
         var txt1 = "";
         rankfn = instance.objects.rankfn.el.getVal()
