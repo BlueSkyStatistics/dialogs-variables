@@ -44,7 +44,7 @@ if(c("design") %in% class({{dataset.name}}))
 }
 
 #Computes the new/existing column
-local({tryCatch({ .GlobalEnv\${{dataset.name}} <- {{dataset.name}} %>% mutate( {{selected.newvar |safe}} = {{selected.formula | safe}} )}, error = function(e){  cat(conditionMessage(e))} )})
+local({tryCatch({ .GlobalEnv\${{dataset.name}} <- {{dataset.name}} %>% dplyr::mutate( {{selected.newvar |safe}} = {{selected.formula | safe}} )}, error = function(e){  cat(conditionMessage(e))} )})
 
 ### restore design attributes
 if(isdesign)

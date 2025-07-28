@@ -26,7 +26,7 @@ class conditionalComputeMayo extends baseModal {
 require(stringr);
 require(dplyr);
 #Computes the new/existing column
-local({tryCatch({ .GlobalEnv\${{dataset.name}} <- {{dataset.name}} %>% mutate({{selected.newvar |safe}} = {{selected.swCase | safe}} )}, error = function(e){  cat(conditionMessage(e))} )})
+local({tryCatch({ .GlobalEnv\${{dataset.name}} <- {{dataset.name}} %>% dplyr::mutate({{selected.newvar |safe}} = {{selected.swCase | safe}} )}, error = function(e){  cat(conditionMessage(e))} )})
 #Refresh the dataset in the data grid
 BSkyLoadRefresh("{{dataset.name}}")
 `,
