@@ -1,3 +1,9 @@
+/**
+  * This file is protected by copyright (c) 2023-2025 by BlueSky Statistics, LLC.
+  * All rights reserved. The copy, modification, or distribution of this file is not
+  * allowed without the prior written permission from BlueSky Statistics, LLC.
+ */
+
 
 var localization = {
     en: {
@@ -211,7 +217,7 @@ bsky_missingSeconds = {{if(options.selected.missingSeconds !="")}} "{{selected.m
 
 
 # Create a mapping function
-BSkyWeekdayToNumber <- function(day) 
+BSkyWeekdayToNumber <<- function(day) 
 {
   if(!all(!is.na(suppressWarnings(as.numeric(day))))){
 	  day = day %>%
@@ -228,7 +234,7 @@ BSkyWeekdayToNumber <- function(day)
   return(day)
 }
 
-BSkyConvertCharDateVarToDate <- function(charDateVar, dateFormat, timeFormat, 
+BSkyConvertCharDateVarToDate <<- function(charDateVar, dateFormat, timeFormat, 
 					missingYear = lubridate::year(lubridate::now()), missingMonth = lubridate::month(lubridate::now()), missingDay = lubridate::day(lubridate::now()),
 					missingHour = lubridate::hour(lubridate::now()), missingMinute = lubridate::minute(lubridate::now()), missingSeconds = floor(lubridate::second(lubridate::now()))
 				)
@@ -256,11 +262,14 @@ BSkyConvertCharDateVarToDate <- function(charDateVar, dateFormat, timeFormat,
 			"Hour Min Sec" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, charDateVar),tz = "UTC"))}, 
 			"Hour Min Sec Millisec (or Microsec)" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, charDateVar),tz = "UTC"))},
 			"Min Sec Millisec (or Microsec)" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", charDateVar),tz = "UTC"))},								
-			"Hour Min" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, charDateVar, ":00"),tz = "UTC"))}, 
+			#"Hour Min" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, charDateVar, ":00"),tz = "UTC"))}, 
+			"Hour Min" = {return(ymd_hm(paste(missingYear, "/", missingMonth, "/", missingDay, charDateVar),tz = "UTC"))},
 			"Min Sec" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", charDateVar),tz = "UTC"))}, 
 			"Sec Millisec (or Microsec)" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", missingMinute, ":", charDateVar),tz = "UTC"))},  
-			"Hour only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, charDateVar, ":00:00"),tz = "UTC"))}, 
-			"Min only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", charDateVar, ":00"),tz = "UTC"))}, 
+			#"Hour only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, charDateVar, ":00:00"),tz = "UTC"))}, 
+			"Hour only" = {return(ymd_h(paste(missingYear, "/", missingMonth, "/", missingDay, charDateVar),tz = "UTC"))}, 
+			#"Min only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", charDateVar, ":00"),tz = "UTC"))},
+			"Min only" = {return(ymd_hm(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", charDateVar),tz = "UTC"))}, 
 			"Sec only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", missingMinute, ":", charDateVar),tz = "UTC"))},
 			"Millisec only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", missingMinute, ":",  paste0(missingSeconds, "." ,sprintf("%03d", as.numeric(charDateVar)))),tz = "UTC"))},
 			"Microsec only" = {return(ymd_hms(paste(missingYear, "/", missingMonth, "/", missingDay, missingHour, ":", missingMinute, ":",  paste0(missingSeconds, "." ,sprintf("%06d", as.numeric(charDateVar)))),tz = "UTC"))},
@@ -268,12 +277,30 @@ BSkyConvertCharDateVarToDate <- function(charDateVar, dateFormat, timeFormat,
 			stop("Invalid time format type")
 		)
 	} else {
+		
+		# Extract "AM" or "PM", return "" if missing
+		matches <- regmatches(charDateVar, gregexpr("AM|PM", charDateVar, ignore.case = TRUE))
+
+		# Convert list output to character vector, replacing empty elements with ""
+		am_pm <- sapply(matches, function(x) if (length(x) == 0) "" else x)
+		
+		charDateVar = trimws(sub("AM|PM","",charDateVar))
+		
+		# Append ":00" as secconds if ":" is not present in the string i.e. only hour is secified
+		charDateVar <- ifelse(grepl(":", charDateVar), charDateVar, paste0(charDateVar, ":00"))
+		
+		date_part <- sub("\\\\s*\\\\d{1,2}:\\\\d{2}(:\\\\d{2}(\\\\.\\\\d{1,3})?)?$", "", charDateVar)
+		#print(date_part)
+
+		time_part <- sub(".*\\\\s(\\\\d{1,2}:\\\\d{2}(:\\\\d{2}(\\\\.\\\\d{1,3})?)?)$", "\\\\1", charDateVar)
+		#print(time_part)
+		
 		# Extract the time component at the end of the string (after the last space)
-		time_part = sub(".*\\\\s(\\\\d{1,2}:\\\\d{1,2}:\\\\d{1,2}(\\\\.\\\\d{1,3})?)$", "\\\\1", charDateVar)
+		#time_part = sub(".*\\\\s(\\\\d{1,2}:\\\\d{1,2}:\\\\d{1,2}(\\\\.\\\\d{1,3})?)$", "\\\\1", charDateVar)
 		#print(time_part)
 
 		# Extract the date component by removing the time part
-		date_part = sub("\\\\s\\\\d{1,2}:\\\\d{1,2}:\\\\d{1,2}(\\\\.\\\\d{1,3})?$", "", charDateVar)
+		#date_part = sub("\\\\s\\\\d{1,2}:\\\\d{1,2}:\\\\d{1,2}(\\\\.\\\\d{1,3})?$", "", charDateVar)
 		#print(date_part)
 		
 		date_ready_str = switch(dateFormat,
@@ -299,7 +326,8 @@ BSkyConvertCharDateVarToDate <- function(charDateVar, dateFormat, timeFormat,
 			"Hour Min" = {paste( time_part, ":00")}, 
 			"Min Sec" = {paste(missingHour, ":", time_part)}, 
 			"Sec Millisec (or Microsec)" = {paste(missingHour, ":", missingMinute, ":", time_part)},  
-			"Hour only" = {paste(time_part, ":00:00")}, 
+			#"Hour only" = {paste(time_part, ":00:00")},
+			"Hour only" = {paste(time_part, ":00")}, 
 			"Min only" = {paste(missingHour, ":", time_part, ":00")}, 
 			"Sec only" = {paste(missingHour, ":", missingMinute, ":", time_part)},
 			"Millisec only" = {paste(missingHour, ":", missingMinute, ":",  paste0(missingSeconds, "." ,sprintf("%03d", as.numeric(time_part))))},
@@ -307,6 +335,7 @@ BSkyConvertCharDateVarToDate <- function(charDateVar, dateFormat, timeFormat,
 			
 			stop("Invalid time format type")
 		)
+		time_ready_str = paste(time_ready_str, am_pm) 
 		#print(time_ready_str)
 		
 		bsky_date_time = switch(dateFormat,
@@ -516,7 +545,7 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)
         var timeZoneOptions = {
             el: new optionsVar(config, {
                 no: "timeZoneOptions",
-                name: "Options",
+                //name: "Options",
                 content: [
                     //objects.TimeZone.el, 
 					objects.missingYear.el,
@@ -537,7 +566,7 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)
             nav: {
                 name: localization.en.navigation,
                 icon: "icon-calendar-1",
-                onclick: `r_before_modal("${config.id}")`,
+                onclick: `r_before_modal('${config.id}')`,
                 modal_id: config.id
             }
         }

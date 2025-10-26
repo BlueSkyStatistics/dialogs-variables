@@ -1,3 +1,9 @@
+/**
+  * This file is protected by copyright (c) 2023-2025 by BlueSky Statistics, LLC.
+  * All rights reserved. The copy, modification, or distribution of this file is not
+  * allowed without the prior written permission from BlueSky Statistics, LLC.
+ */
+
 
 var localization = {
     en: {
@@ -18,8 +24,8 @@ Computes an expression and stores the result in a variable/column of a dataframe
 <b>Usage</b>
 <br/>
 <code> 
-DatasetX <- DatasetX %>% mutate ( var1 = Expression)​<br/>
-DatasetX <- DatasetX %>% mutate ( var1 = var2 + var3)​
+DatasetX <- DatasetX %>% dplyr::mutate ( var1 = Expression)​<br/>
+DatasetX <- DatasetX %>% dplyr::mutate ( var1 = var2 + var3)​
 </code> <br/>
 <b>Arguments</b><br/>
 <ul>
@@ -77,7 +83,7 @@ if(c("design") %in% class({{dataset.name}}))
 }
 
 #Computes the new/existing column
-local({tryCatch({ .GlobalEnv\${{dataset.name}} <- {{dataset.name}} %>% mutate( {{selected.newvar |safe}} = {{selected.formula | safe}} )}, error = function(e){  cat(conditionMessage(e))} )})
+local({tryCatch({ .GlobalEnv\${{dataset.name}} <- {{dataset.name}} %>% dplyr::mutate( {{selected.newvar |safe}} = {{selected.formula | safe}} )}, error = function(e){  cat(conditionMessage(e))} )})
 
 ### restore design attributes
 if(isdesign)

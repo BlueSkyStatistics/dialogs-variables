@@ -1,3 +1,9 @@
+/**
+  * This file is protected by copyright (c) 2023-2025 by BlueSky Statistics, LLC.
+  * All rights reserved. The copy, modification, or distribution of this file is not
+  * allowed without the prior written permission from BlueSky Statistics, LLC.
+ */
+
 
 var localization = {
     en: {
@@ -75,7 +81,7 @@ class nonNormalBoxCoxTransform extends baseModal {
 
 require(MASS)
 
-BoxCoxTransform <- function(response, lambda=0) 
+BoxCoxTransform <<- function(response, lambda=0) 
 {
     if (lambda == 0L) 
 	{ 

@@ -1,3 +1,9 @@
+/**
+  * This file is protected by copyright (c) 2023-2025 by BlueSky Statistics, LLC.
+  * All rights reserved. The copy, modification, or distribution of this file is not
+  * allowed without the prior written permission from BlueSky Statistics, LLC.
+ */
+
 
 var localization = {
     en: {
@@ -10,6 +16,7 @@ var localization = {
         Destination: "Select date variables to convert to character",
         DateFormat: "Select the date format to convert to",
         TimeZone: "Select a time zone (default -nothing  selected is the local time zone of the PC)",
+		advanced_lbl: "Advanced",
         help: {
             title: "Convert Date To character",
             r_help: "help(strftime, package=\"base\")",
@@ -126,7 +133,7 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)
         var timeZoneOptions = {
             el: new optionsVar(config, {
                 no: "timeZoneOptions",
-                name: "Advanced",
+                name: localization.en.advanced_lbl,
                 content: [
                     objects.TimeZone.el,
                 ]
@@ -141,7 +148,7 @@ BSkyLoadRefresh(bskyDatasetName="{{dataset.name}}",load.dataframe=TRUE)
             nav: {
                 name: localization.en.navigation,
                 icon: "icon-abc",
-                onclick: `r_before_modal("${config.id}")`,
+                onclick: `r_before_modal('${config.id}')`,
                 
             }
         }
