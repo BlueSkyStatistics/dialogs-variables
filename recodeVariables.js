@@ -88,7 +88,7 @@ BSkyLoadRefresh("{{dataset.name}}")
             label5a: { el: new labelVar(config, { label: recodeVariables.t('label5a'), h: 6 }) },
             label5b: { el: new labelVar(config, { label: recodeVariables.t('label5b'), h: 6 }) },
             label6: { el: new labelVar(config, { label: recodeVariables.t('label6'), h: 6 }) },
-            oldnewvals: {
+           /*  oldnewvals: {
                 el: new input(config, {
                     no: 'oldnewvals',
                     label: recodeVariables.t('oldnewvals'),
@@ -99,7 +99,21 @@ BSkyLoadRefresh("{{dataset.name}}")
                     required: true,
                     type: "character"
                 }),
+            }, */
+
+
+             oldnewvals: {
+                el: new advancedTextBox(config, {
+                    no: 'oldnewvals',
+                    label: recodeVariables.t('oldnewvals'),
+                    placeholder: "",
+                    extraction: "TextAsIs",
+                   // wrapped: '%>%\n\tdplyr::filter(%val%)',
+                    type: "character",
+                    allow_spaces:true
+                })
             },
+
 
             dontMakeFactor: { el: new checkbox(config, { label: recodeVariables.t('dontMakeFactor'), style: "mt-2",no: "dontMakeFactor",
             extraction: "Boolean" }) },
@@ -119,7 +133,7 @@ BSkyLoadRefresh("{{dataset.name}}")
         
         this.help = {
             title: recodeVariables.t('help.title'),
-            r_help: recodeVariables.t('help.r_help'),  //r_help: "help(data,package='utils')",
+            r_help: recodeVariables.t('help.r_help'), //Fix by Anil //r_help: "help(data,package='utils')",
             body: recodeVariables.t('help.body')
         }
 ;
