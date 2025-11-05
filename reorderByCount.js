@@ -32,9 +32,9 @@ Re-order variables in the dataset in alphabetical order. We use the sort functio
 <br/>
 <code> 
 ##Reordering alphabetically (A-Z)
-Dataset_name <- Dataset_name %>%   select(sort(names(.)))
+Dataset_name <- Dataset_name %>%   dplyr::select(sort(names(.)))
 ##Reordering alphabetically (Z-A)
-Dataset_name <- Dataset_name %>%  select(rev(sort(names(.))))
+Dataset_name <- Dataset_name %>%  dplyr::select(rev(sort(names(.))))
 </code> <br/>
 <b>Arguments</b><br/>
 None<br/>

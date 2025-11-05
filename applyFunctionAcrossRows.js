@@ -23,7 +23,7 @@ Applies a function across all rows of the selected variables (columns) in a data
 <b>Usage</b>
 <br/>
 <code> 
-dataset_name$new_variable <-dataset_name  %>% select(var1,var2) %>% apply(1, function_name, na.rm = TRUE)
+dataset_name$new_variable <-dataset_name  %>% dplyr::select(var1,var2) %>% apply(1, function_name, na.rm = TRUE)
 apply(X, MARGIN, FUN, ...)
 </code> <br/>
 <b>Arguments</b><br/>
