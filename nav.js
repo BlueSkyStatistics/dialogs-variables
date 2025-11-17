@@ -15,9 +15,9 @@ const nav = () => ({
             "name": t('variables_Box_Cox'),// {ns: 'menutoolbar'}),
             "icon": "icon-gaussian-function",
             "children": [
+                "./addRemoveBoxCoxLambda",
                 "./nonNormalBoxCoxTransform",
                 "./inspectBoxCoxLambda",
-                "./addRemoveBoxCoxLambda",
                 "./inverseBoxCoxTransform"
             ]
         },        			
@@ -26,10 +26,10 @@ const nav = () => ({
             "icon": "icon-calculator",
             "children": [
                 "./applyFunctionAcrossRows",
-                "./computeDummyVariables",
                 "./computeVariable",
                 "./conditionalCompute",
-                "./conditionalComputeMayo"
+                "./conditionalComputeMayo",
+                "./computeDummyVariables"
             ]
         },
         "./concatenateVariables",
