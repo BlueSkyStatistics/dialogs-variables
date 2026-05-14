@@ -1,18 +1,9 @@
-/**
-  * This file is protected by copyright (c) 2023-2025 by BlueSky Statistics, LLC.
-  * All rights reserved. The copy, modification, or distribution of this file is not
-  * allowed without the prior written permission from BlueSky Statistics, LLC.
- */
-
-const {getT} = global.requireFromRoot("localization");
-let t = getT('menutoolbar')
-const nav = () => ({
-    "name": t('variables_top_level_title'),// {ns: 'menutoolbar'}),
-    "tab": "Variables",
+const nav = {
+    "id": "menu-variables",
     "buttons": [
         "./binNumericVariables",
         {
-            "name": t('variables_Box_Cox'),// {ns: 'menutoolbar'}),
+            "id": "menu-variables-box-cox",
             "icon": "icon-gaussian-function",
             "children": [
                 "./addRemoveBoxCoxLambda",
@@ -20,9 +11,9 @@ const nav = () => ({
                 "./inspectBoxCoxLambda",
                 "./inverseBoxCoxTransform"
             ]
-        },        			
+        },
         {
-            "name": t('variables_Compute'),// {ns: 'menutoolbar'}),
+            "id": "menu-variables-compute",
             "icon": "icon-calculator",
             "children": [
                 "./applyFunctionAcrossRows",
@@ -34,11 +25,11 @@ const nav = () => ({
         },
         "./concatenateVariables",
         {
-            "name": t('variables_Convert'),// {ns: 'menutoolbar'}),
+            "id": "menu-variables-convert",
             "icon": "icon-exchange",
             "children": [
                 "./convertDateToString",
-				"./convertStringToDate",
+                "./convertStringToDate",
                 "./convertStringToDateTime",
                 "./convertToFactor",
                 "./ConvertToOrdinal"
@@ -46,7 +37,7 @@ const nav = () => ({
         },
         "./deleteVariables",
         {
-            "name": t('variables_Factor_Levels'),// {ns: 'menutoolbar'}),
+            "id": "menu-variables-factorlevels",
             "icon": "icon-shapes",
             "children": [
                 "./addNewLevels",
@@ -56,12 +47,12 @@ const nav = () => ({
                 "./lumpIntoOther",
                 "./specifyLevelsToKeepOrReplace",
                 "./reorderByCount",
-				"./byAnotherVariable",
+                "./byAnotherVariable",
                 "./reorderByOccurance",
             ]
         },
         {
-            "name": t('variables_Missing_Values'),// {ns: 'menutoolbar'}),
+            "id": "menu-variables-missingvalues",
             "icon": "icon-na",
             "children": [
                 "./replaceMissingValues",
@@ -76,10 +67,7 @@ const nav = () => ({
         "./standardizeVariables",
         "./transformVariables"
     ]
-})
-
-module.exports = {
-    nav: nav(),
-    render: () => nav()
 }
+
+module.exports.nav = nav
 
