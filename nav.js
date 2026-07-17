@@ -37,9 +37,10 @@ const nav = () => ({
             "name": t('variables_Convert'),// {ns: 'menutoolbar'}),
             "icon": "icon-exchange",
             "children": [
-                "./convertDateToString",
 				"./convertStringToDate",
                 "./convertStringToDateTime",
+				"./convertDateToString",
+				"./convertNumericToDate",
                 "./convertToFactor",
                 "./ConvertToOrdinal"
             ]
