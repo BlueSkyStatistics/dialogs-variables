@@ -36,6 +36,7 @@ const nav = {
             "icon": "icon-exchange",
             "children": [
                 "./convertDateToString",
+				"./convertNumericToDate",
 				"./convertStringToDate",
                 "./convertStringToDateTime",
                 "./convertToFactor",
