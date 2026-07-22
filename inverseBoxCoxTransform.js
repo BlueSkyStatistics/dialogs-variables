@@ -33,6 +33,19 @@ var localization = {
 				Transform back (inverse) from a prior Box-Cox transformed value using the specified lambda or the lambda associated with the variable selected 
 				<br/>
 				<br/>
+				Uses the standard inverse of the Box-Cox formula:
+				<br/>
+				λ = 0: X = Exp( Y )
+				<br/>
+				λ = 1: X = Y (identity - no transformation)
+				<br/>
+				λ ≠ 0 and λ ≠ 1: X = ( 1 + λ * Y ) ^ ( 1/λ )
+				<br/>
+				<br/>
+				This is the exact inverse of the standard Box-Cox formula Y = ( X^λ - 1 ) / λ and is
+				consistent with Minitab, JMP, SAS, and R's car::bcPower
+				<br/>
+				<br/>
 				For the detail help on Box-Cox or Lambda (λ) - use R help(boxcox, package = MASS)
 				<br/>
 				<br/>
@@ -77,24 +90,20 @@ require(MASS)
 
 InverseBoxCoxTransform <<- function(response, lambda=0) 
 {
-    if (lambda == 0L) 
+    if (lambda == 0) 
 	{ 
 		exp(response)
 	}
-	else if(lambda %in% c(0.5, 0.33, 1, 2, 3))
+	else if(lambda == 1)
 	{
-		#response ^ lambda
-		exp(log(response)/lambda)
-	}
-	else if(lambda %in% c(-0.5, -0.33, -1, -2, -3))
-	{
-		#1/(response ^ (-lambda))
-		exp(log(response)/lambda)
+		response
 	}
     else 
 	{ 
-		#(response^lambda - 1) / lambda
-		exp(log(1 + lambda * response)/lambda)
+		# Standard inverse of (x^lambda - 1) / lambda
+		# x = (1 + lambda * y) ^ (1/lambda)
+		# Using exp(log(...)/lambda) for numerical stability
+		exp(log(1 + lambda * response) / lambda)
 	}
 }
 

@@ -14,9 +14,10 @@ const nav = {
             "icon": "icon-gaussian-function",
             "children": [
                 "./nonNormalBoxCoxTransform",
+				"./inverseBoxCoxTransform",
                 "./inspectBoxCoxLambda",
-                "./addRemoveBoxCoxLambda",
-                "./inverseBoxCoxTransform"
+                "./addRemoveBoxCoxLambda"
+                
             ]
         },        			
         {
