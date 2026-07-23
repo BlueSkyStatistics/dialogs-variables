@@ -20,7 +20,14 @@ const nav = () => ({
                 "./inspectBoxCoxLambda",
                 "./addRemoveBoxCoxLambda"				
             ]
-        },        			
+        },     
+		{
+            "name": "Johnson",
+            "icon": "icon-gaussian-function",
+            "children": [
+  
+            ]			
+		},		
         {
             "name": t('variables_Compute'),// {ns: 'menutoolbar'}),
             "icon": "icon-calculator",
