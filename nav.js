@@ -22,7 +22,7 @@ const nav = () => ({
             ]
         },     
 		{
-            "name": "Johnson",
+            "name": t('variables_Johnson'),
             "icon": "icon-gaussian-function",
             "children": [
   
