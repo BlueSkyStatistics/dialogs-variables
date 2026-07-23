@@ -6,7 +6,6 @@
 
 
 
-
 class nonNormalBoxCoxTransform extends baseModal {
     static dialogId = 'nonNormalBoxCoxTransform'
     static t = baseModal.makeT(nonNormalBoxCoxTransform.dialogId)
@@ -22,30 +21,40 @@ require(MASS)
 
 BoxCoxTransform <<- function(response, lambda=0) 
 {
-    if (lambda == 0L) 
+    if (lambda == 0) 
 	{ 
 		log(response) 
 	}
-	else if(lambda %in% c(0.5, 0.33, 1, 2, 3))
+	else if(lambda == 1)
 	{
-		response ^ lambda
-	}
-	else if(lambda %in% c(-0.5, -0.33, -1, -2, -3))
-	{
-		1/(response ^ (-lambda))
+		response
 	}
     else 
 	{ 
 		(response^lambda - 1) / lambda 
 	}
 }
+
+# Friendly name for well-known Box-Cox lambda values (informational only - does not affect computation)
+BSkyBoxCoxLambdaName <<- function(lambda)
+{
+	if(lambda == 2) return("square ( x^2 )")
+	if(lambda == 1) return("no transformation ( x )")
+	if(lambda == 0.5) return("square root ( sqrt(x) )")
+	if(round(lambda, 2) == 0.33) return("cube root")
+	if(lambda == 0.25) return("fourth root")
+	if(lambda == 0) return("natural log ( log(x) )")
+	if(lambda == -0.5) return("reciprocal square root ( 1/sqrt(x) )")
+	if(lambda == -1) return("reciprocal ( 1/x )")
+	if(lambda == -2) return("reciprocal square ( 1/x^2 )")
+	return("")
+}
 	
 {{if(options.selected.gpbox1 === "variable")}}
 	{{if(options.selected.variableSelcted === "")}} 
 		BSkyFormat("\nError: A variable must be selected\n")
 	{{#else}}
-		{{if(options.selected.boxcoxChk !== "TRUE")}}
-			if(length({{dataset.name}}\${{selected.variableSelcted | safe}}[{{dataset.name}}\${{selected.variableSelcted | safe}} < 0 & !is.na({{dataset.name}}\${{selected.variableSelcted | safe}})]) == 0)
+		if(length({{dataset.name}}\${{selected.variableSelcted | safe}}[{{dataset.name}}\${{selected.variableSelcted | safe}} < 0 & !is.na({{dataset.name}}\${{selected.variableSelcted | safe}})]) == 0)
 			{
 				boxcoxObj = NULL 
 				bcox_{{selected.variableSelcted | safe}} = c()
@@ -59,13 +68,24 @@ BoxCoxTransform <<- function(response, lambda=0)
 						boxcoxLambdaOptimal <- boxcoxObj$x[which.max(boxcoxObj$y)]
 						boxcoxLambda = boxcoxLambdaOptimal
 						#BSkyFormat(cbind(x_points = boxcoxObj$x, y_points = boxcoxObj$y), outputTableRenames = "log-likelihood values for Lambda")
-						BSkyFormat(paste("\nBased on log-likelihood function, Box-Cox lambda value chosen for the transformation is:", round(boxcoxLambda,{{selected.digits | safe}}),"\n"))
+						BSkyFormat(paste("\nBased on log-likelihood function, Box-Cox lambda value chosen for the transformation is:", round(boxcoxLambda,{{selected.digits | safe}}),
+								ifelse(BSkyBoxCoxLambdaName(boxcoxLambda) != "", paste0("( ", BSkyBoxCoxLambdaName(boxcoxLambda), " )"), ""),
+								"\nFormula: ", ifelse(boxcoxLambda == 0, "Y = Ln( X )", ifelse(boxcoxLambda == 1, "Y = X", paste0("Y = ( X^", round(boxcoxLambda, {{selected.digits | safe}}), " - 1 ) / ", round(boxcoxLambda, {{selected.digits | safe}})))),
+								"\n"))
 					}
 				{{#else}}
 					boxcoxLambda = c({{selected.lambda | safe}})
 					
-					BSkyFormat(paste("\nBox-Cox lambda value specified for the transformation is:", round(boxcoxLambda,{{selected.digits | safe}}),"\n"))
+					BSkyFormat(paste("\nBox-Cox lambda value specified for the transformation is:", round(boxcoxLambda,{{selected.digits | safe}}),
+								ifelse(BSkyBoxCoxLambdaName(boxcoxLambda) != "", paste0("( ", BSkyBoxCoxLambdaName(boxcoxLambda), " )"), ""),
+								"\nFormula: ", ifelse(boxcoxLambda == 0, "Y = Ln( X )", ifelse(boxcoxLambda == 1, "Y = X", paste0("Y = ( X^", round(boxcoxLambda, {{selected.digits | safe}}), " - 1 ) / ", round(boxcoxLambda, {{selected.digits | safe}})))),
+								"\n"))
 				{{/if}}
+					
+					if(boxcoxLambda != -999 && abs(boxcoxLambda) >= 2)
+					{
+						BSkyFormat("Warning: the optimal Lambda is at the boundary of the Box-Cox search range (-2 to 2). This typically means a power transformation is a poor fit for this data - the transformed values will have very little variation and may appear nearly identical after rounding. You may want to try the Johnson transformation (Transform > Johnson transformation) which often provides a much better fit in these cases")
+					}
 					
 					if(boxcoxLambda != -999)  
 					{
@@ -85,22 +105,8 @@ BoxCoxTransform <<- function(response, lambda=0)
 			} else {
 					BSkyFormat("Error: Box-Cox tranformation cannot be performed with negative values")
 			}
-		{{/if}}	
 		
-		{{if(options.selected.johnsonChk === "TRUE")}}
 		
-			jon_{{selected.variableSelcted | safe}} = NULL
-			
-			jon_{{selected.variableSelcted | safe}} <- RE.Johnson(with({{dataset.name}}, {{selected.variableSelcted | safe}}[!is.na({{selected.variableSelcted | safe}})]))$transformed
-			
-			if(length(jon_{{selected.variableSelcted | safe}}) > 0 && !all(is.na(jon_{{selected.variableSelcted | safe}})))
-			{
-				{{dataset.name}}\${{selected.variableSelcted | safe}}_jon = {{dataset.name}}\${{selected.variableSelcted | safe}}
-				
-				{{dataset.name}}\${{selected.variableSelcted | safe}}_jon[!is.na({{dataset.name}}\${{selected.variableSelcted | safe}}_jon)] = round(jon_{{selected.variableSelcted | safe}}, {{selected.digits | safe}})
-				
-			}
-		{{/if}}
 		
 		BSkyLoadRefresh('{{dataset.name}}')
 		
@@ -111,8 +117,7 @@ BoxCoxTransform <<- function(response, lambda=0)
 		boxcoxLambdaOptimal = -999 
 		bcox_temp_vector_values = c()
 		
-		{{if(options.selected.boxcoxChk !== "TRUE")}}
-			if(length(temp_vector_values[temp_vector_values < 0 & !is.na(temp_vector_values)]) == 0)
+		if(length(temp_vector_values[temp_vector_values < 0 & !is.na(temp_vector_values)]) == 0)
 			{
 				boxcoxObj = NULL 
 				boxcoxLambda = NULL
@@ -127,10 +132,18 @@ BoxCoxTransform <<- function(response, lambda=0)
 						boxcoxLambda = boxcoxLambdaOptimal
 					}
 				{{#else}}
-					boxcoxLambda = {{selected.lambda | safe}}
+					boxcoxLambda = c({{selected.lambda | safe}})
 				{{/if}}
 				
-					BSkyFormat(paste("\nBoxcox lambda value chosen for the transformation is", round(boxcoxLambda,{{selected.digits | safe}}),"\n"))
+					BSkyFormat(paste("\nBoxcox lambda value chosen for the transformation is", round(boxcoxLambda,{{selected.digits | safe}}),
+								ifelse(BSkyBoxCoxLambdaName(boxcoxLambda) != "", paste0("( ", BSkyBoxCoxLambdaName(boxcoxLambda), " )"), ""),
+								"\nFormula: ", ifelse(boxcoxLambda == 0, "Y = Ln( X )", ifelse(boxcoxLambda == 1, "Y = X", paste0("Y = ( X^", round(boxcoxLambda, {{selected.digits | safe}}), " - 1 ) / ", round(boxcoxLambda, {{selected.digits | safe}})))),
+								"\n"))
+					
+					if(!is.null(boxcoxLambda) && abs(boxcoxLambda) >= 2)
+					{
+						BSkyFormat("Warning: the optimal Lambda is at the boundary of the Box-Cox search range (-2 to 2). This typically means a power transformation is a poor fit for this data - the transformed values will have very little variation and may appear nearly identical after rounding. You may want to try the Johnson transformation (Transform > Johnson transformation) which often provides a much better fit in these cases")
+					}
 					
 					if(boxcoxLambda != -999)  
 					{
@@ -156,58 +169,14 @@ BoxCoxTransform <<- function(response, lambda=0)
 				} else {
 					BSkyFormat("Error: Box-Cox tranformation cannot be performed with negative values")
 				}
-		{{/if}}	
 		
 		
-		{{if(options.selected.johnsonChk === "TRUE")}}
-			jon_temp_vector_values = NULL
-			
-			jon_temp_vector_values <- RE.Johnson(temp_vector_values[!is.na(temp_vector_values)])$transformed
-			if(length(jon_temp_vector_values) > 0 && !all(is.na(jon_temp_vector_values)))
-			{
-				temp_vector_values[!is.na(temp_vector_values)] = jon_temp_vector_values
-				
-				{{if(options.selected.johnsonDatasetName !== "")}}
-					{{selected.johnsonDatasetName | safe}} = as.data.frame(matrix(temp_vector_values, nrow = dim({{dataset.name}})[1], byrow = FALSE))
-					names({{selected.johnsonDatasetName | safe}}) = names({{dataset.name}})
-					BSkyLoadRefresh('{{selected.johnsonDatasetName | safe}}')
-				{{#else}}
-					{{dataset.name}}_jon = as.data.frame(matrix(temp_vector_values, nrow = dim({{dataset.name}})[1], byrow = FALSE))
-					names({{dataset.name}}_jon) = names({{dataset.name}})
-					BSkyLoadRefresh('{{dataset.name}}_jon')
-				{{/if}}
-			}
-		{{/if}}
 {{/if}}
+
 `
         };
         var objects = {
             content_var: { el: new srcVariableList(config, {action: "move", scroll:true}) }, 
-			boxcoxChk: {
-                el: new checkbox(config, {
-                    label: nonNormalBoxCoxTransform.t('boxcoxChk'), 
-					no: "boxcoxChk",
-                    bs_type: "valuebox",
-                    //style: "mt-2 mb-1",
-                    extraction: "BooleanValue",
-                    true_value: "TRUE",
-                    false_value: " ",
-					state: "checked",
-					newline: true,
-                })
-            },
-			johnsonChk: {
-                el: new checkbox(config, {
-                    label: nonNormalBoxCoxTransform.t('johnsonChk'), 
-					no: "johnsonChk",
-                    bs_type: "valuebox",
-                    style: "mb-2",
-                    extraction: "BooleanValue",
-                    true_value: "TRUE",
-                    false_value: " ",
-					newline: true,
-                })
-            },
 			digits: {
                 el: new inputSpinner(config, {
                     no: 'digits',
@@ -305,28 +274,12 @@ BoxCoxTransform <<- function(response, lambda=0)
                     value: "",
                 })
             },
-			johnsonDatasetName: {
-                el: new input(config, {
-                    no: 'johnsonDatasetName',
-                    label: nonNormalBoxCoxTransform.t('johnsonDatasetName'),
-                    placeholder: "",
-                    required: false,
-                    type: "character",
-					//filter: "character|numeric",
-					style: "ml-5 mb-2",
-                    extraction: "TextAsIs",
-					//allow_spaces:true,
-                    value: "",
-                })
-            },
         };
         const content = {
             left: [objects.content_var.el.content],
             right: [
-					//objects.boxcoxChk.el.content,
 					
 					
-					//objects.johnsonChk.el.content,
 					
 					objects.label2.el.content,
 					
@@ -337,7 +290,6 @@ BoxCoxTransform <<- function(response, lambda=0)
 					objects.selectDatasetRad.el.content,
 					
 					objects.boxcoxDatasetName.el.content,
-					//objects.johnsonDatasetName.el.content,
 					
 					objects.lambda.el.content,
 					objects.digits.el.content
@@ -352,7 +304,7 @@ BoxCoxTransform <<- function(response, lambda=0)
         
         this.help = {
             title: nonNormalBoxCoxTransform.t('help.title'),
-            r_help: nonNormalBoxCoxTransform.t('help.r_help'),  //r_help: "help(data,package='utils')",
+            r_help: nonNormalBoxCoxTransform.t('help.r_help'), //Fix by Anil //r_help: "help(data,package='utils')",
             body: nonNormalBoxCoxTransform.t('help.body')
         }
 ;

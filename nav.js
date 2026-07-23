@@ -15,10 +15,10 @@ const nav = () => ({
             "name": t('variables_Box_Cox'),// {ns: 'menutoolbar'}),
             "icon": "icon-gaussian-function",
             "children": [
-                "./addRemoveBoxCoxLambda",
                 "./nonNormalBoxCoxTransform",
+				"./inverseBoxCoxTransform",
                 "./inspectBoxCoxLambda",
-                "./inverseBoxCoxTransform"
+                "./addRemoveBoxCoxLambda"				
             ]
         },        			
         {

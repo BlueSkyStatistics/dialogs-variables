@@ -22,24 +22,20 @@ require(MASS)
 
 InverseBoxCoxTransform <<- function(response, lambda=0) 
 {
-    if (lambda == 0L) 
+    if (lambda == 0) 
 	{ 
 		exp(response)
 	}
-	else if(lambda %in% c(0.5, 0.33, 1, 2, 3))
+	else if(lambda == 1)
 	{
-		#response ^ lambda
-		exp(log(response)/lambda)
-	}
-	else if(lambda %in% c(-0.5, -0.33, -1, -2, -3))
-	{
-		#1/(response ^ (-lambda))
-		exp(log(response)/lambda)
+		response
 	}
     else 
 	{ 
-		#(response^lambda - 1) / lambda
-		exp(log(1 + lambda * response)/lambda)
+		# Standard inverse of (x^lambda - 1) / lambda
+		# x = (1 + lambda * y) ^ (1/lambda)
+		# Using exp(log(...)/lambda) for numerical stability
+		exp(log(1 + lambda * response) / lambda)
 	}
 }
 
@@ -252,7 +248,7 @@ origLambda = NULL
         
         this.help = {
             title: inverseBoxCoxTransform.t('help.title'),
-            r_help: inverseBoxCoxTransform.t('help.r_help'),  //r_help: "help(data,package='utils')",
+            r_help: inverseBoxCoxTransform.t('help.r_help'), //Fix by Anil //r_help: "help(data,package='utils')",
             body: inverseBoxCoxTransform.t('help.body')
         }
 ;
